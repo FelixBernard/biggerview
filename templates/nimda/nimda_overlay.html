@@ -1,0 +1,26 @@
+
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/nimda_overlay.css') }}">
+
+<div class="admin_navbar">
+    <a class="a_for_button" href="/log/{{link}}">
+        <button class="button">Log Table</button>
+    </a>
+    <a class="a_for_button" href="/ip/{{link}}">
+        <button class="button">ip Table</button>
+    </a>
+    <a class="a_for_button" href="/3rqjdf/{{link}}">
+        <button class="button">Login Page</button>
+    </a>
+    <a class="a_for_button" href="/283hr3u/{{link}}">
+        <button class="button">Admin Page</button>
+    </a>
+
+    {% if user and user.rank == "admin" %}
+    <div class="ip-box">{{user.request.headers.get('Cf-Connecting-Ip')}}</div>
+    {% endif %}
+    
+</div>
+
+{% endblock %}

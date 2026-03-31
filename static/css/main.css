@@ -1,0 +1,127 @@
+* {
+    margin: 0;
+    padding: 0;
+    /* box-sizing: border-box; */
+    font-family: Arial, Helvetica, sans-serif;
+    /* background-color: #1e2939; */
+}
+
+html {
+    background-color: #030712;
+    /* background-image: linear-gradient(-54deg, #1e2939 40%, #1e2939 100%); */
+}
+
+body {
+    background-color: #030712;
+}
+
+:root {
+    --background: #030712;
+    --secandary: #101828;
+}
+
+#main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 5rem;
+}
+
+#overnavbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#navbar {
+    position: fixed;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    z-index: 99;
+    /* margin: 1rem; */
+    /* background-color: rgba(255, 255, 255, 0.142); */
+    backdrop-filter: blur(5px);
+    border-radius: 1rem;
+    border-style: solid;
+    border-width: 1px 0px 0px 1px;
+    border-color: rgba(216, 216, 216, 0.1);
+    padding: 1rem;
+    margin-top: 0.5rem;
+    box-shadow: inset 0px 0px 20px 5px rgba(255, 255, 255, 0.03);
+}
+
+.button {
+    width: fit-content;
+    background-color: #155dfc;
+    border-radius: 0.8rem;
+    cursor: pointer;
+    border-style: none;
+    padding: 0.8rem;
+    color: white;
+    transition: 0.3s;
+}
+
+.button:hover {
+    /* background-color: rgb(96, 93, 255, 0.8); */
+    box-shadow: inset 0px 0px 10px 5px rgba(255, 255, 255, 0.25);
+}
+
+.a_for_button {
+    margin: 0.5rem;
+    text-decoration: none;
+    width: fit-content;
+    height: fit-content;
+}
+
+.button_wrapper {
+    padding: 0.5rem;
+}
+
+.popups{
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(137, 137, 137, 0.486);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+
+.cookies{
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: auto;
+    height: fit-content;
+    background-color: white;
+    border-radius: var(--radius);
+    margin: 2rem;
+    padding: 1rem;
+}
+
+.cookies button{
+    margin-top: 0.8rem;
+}
+
+.afterlock{
+    display: none;
+    width: 20rem;
+    height: fit-content;
+    background-color: white;
+    border-radius: var(--radius);
+    padding: 1rem;
+}
+
+
+@media (prefers-reduce-motion) {
+    *{
+        transition: none;
+    }
+}
+    

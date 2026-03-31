@@ -1,0 +1,55 @@
+.admin_navbar {
+    position: fixed;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    z-index: 99;
+    /* margin: 1rem; */
+    /* background-color: rgba(255, 255, 255, 0.142); */
+    backdrop-filter: blur(5px);
+    border-radius: 1rem;
+    border-style: solid;
+    border-width: 1px 0px 0px 1px;
+    border-color: rgba(216, 216, 216, 0.1);
+    padding: 0.2rem;
+    margin-top: -0.5rem;
+    box-shadow: inset 0px 0px 20px 5px rgba(255, 255, 255, 0.03);
+}
+
+.admin_main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4rem;
+    width: 100%;
+}
+
+.admin_box {
+  /* box-shadow: 5px 4px 14px 1px #4141414a; */
+  border-radius: 1rem;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: fit-content;
+  background-color: #101828;
+  border-style: solid;
+  border-width: 1px 0px 0px 1px;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.in_admin_box {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.ip-box {
+    color: rgb(144, 144, 144);
+    margin: 0.5rem;
+    padding: 0.8rem;
+}

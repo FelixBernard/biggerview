@@ -1,0 +1,9 @@
+infos_to_setup.txt
+/__pycache__
+*/__pycache__
+nutzer*
+server_config.py
+sql/sql_token.py
+scripts/user_setup.py
+/.env
+/.vscode

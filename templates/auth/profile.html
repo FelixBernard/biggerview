@@ -1,0 +1,25 @@
+{% extends "main/overlay.html" %}
+{% block content%}
+
+{% include "nimda/nimda_overlay.html" %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+
+<div class="admin_main">
+    {% if user %}
+    {% if user.rank == "admin" %}
+        <p>Rank: {{user.rank}}</p>
+    {% endif %}
+
+    {% if link %}
+        <a href="{{link}}">
+            <button class="button">Log Table</button>
+        </a>
+        <a href="/3rqjdf/{{link}}">
+            <button class="button">Login Link</button>
+        </a>
+    {% endif %}
+    {% endif %}
+</div>
+
+{% endblock %}

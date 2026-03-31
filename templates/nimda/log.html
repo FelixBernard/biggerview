@@ -1,0 +1,22 @@
+{% extends "main/overlay.html" %}
+{% block content%}
+
+{% include "nimda/nimda_overlay.html" %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/log.css') }}">
+<script src="{{ url_for('static', filename='js/nimda/log.js') }}" defer></script>
+
+<div class="admin_main">
+<div class="admin_box">
+    <div class="button_wrapper"><button class="button" id="show">DB zeigen</button></div>
+    <div class="button_wrapper"><button class="button" onclick="minus_offset()">-1</button></div>
+    <div class="button_wrapper"><button class="button" onclick="add_offset()">+1</button></div>
+    <div class="button_wrapper"><button class="button" onclick="zero_offset()">Seite 0</button></div>
+</div>
+<div class="debug-card">
+    <table class="debug-table" id="db_table"></table>
+</div>
+</div>
+    
+    
+{% endblock %}

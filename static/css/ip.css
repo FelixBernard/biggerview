@@ -1,0 +1,91 @@
+.wrapper {
+    position: relative;
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.block {
+    position: relative;
+    width: 90%;
+    max-width: 1500px;
+    height: auto;
+    /* min-height: 500px; */
+    background: rgb(255, 255, 255);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow:
+      0 10px 30px rgba(0, 0, 0, 0.5);
+      /* inset 0 0 20px rgb(70, 70, 70); */
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+    text-align: center;
+    padding: 1rem;
+    margin: 2rem;
+}
+
+h3, h2 {
+    color: rgb(64, 64, 64);
+    margin: 0.2rem;}
+p {
+    color: rgb(64, 64, 64);
+    margin: 0.2rem;
+}
+
+.debug-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin: 20px auto;
+    max-width: 900px;
+    overflow: hidden;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.debug-header {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    font-weight: bold;
+    color: #333;
+}
+
+.debug-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Wichtig für Umbrüche */
+}
+
+.debug-table td {
+    padding: 12px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.9rem;
+    vertical-align: top;
+    word-wrap: break-word; /* Bricht lange IPs um */
+    word-break: break-all;
+}
+
+.debug-table .label {
+    width: 30%;
+    color: #666;
+    font-weight: 600;
+    background: #fafafa;
+}
+
+.debug-table .value {
+    width: 70%;
+    color: #d63384; /* Highlightfarbe für Werte */
+    font-family: 'Courier New', monospace;
+}
+
+.debug-table tr:last-child td {
+    border-bottom: none;
+}

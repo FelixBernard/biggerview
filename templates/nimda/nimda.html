@@ -1,0 +1,45 @@
+{% extends "main/overlay.html" %}
+{% block content%}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/nimda.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script rel="script", src="{{ url_for('static', filename='js/nimda/chart.js') }}" defer></script>
+<script rel="script", src="{{ url_for('static', filename='js/nimda/slider_button.js') }}" defer></script>
+<script rel="script", src="{{ url_for('static', filename='js/nimda/reload_animation.js') }}" defer></script>
+
+{% include "nimda/nimda_overlay.html" %}
+
+<div class="admin_main">
+    <div class="admin_box"><div class="in_admin_box">
+    <div class="button_wrapper"><button class="button">Login freischalten/ausschalten</button></div>
+    <div class="button_wrapper"><button class="button">Neuer secret path</button></div>
+    <hr style="width:90%;height:1px;text-align:left;margin-left:0;margin-bottom: 1rem;margin-top: 0.5rem; background-color: #222f49;border-style:none;border-color:gray">
+    <form id="singup-form" action="http://127.0.0.1:8080/api/newkey" method="post">
+        <input type="email" class="name" id="textbox_e-mail" placeholder="E-mail" autocomplete="off" name="email">
+        <div class="button_wrapper"><div class="button" id="submit-button">Neuer Admin key</div></div>
+    </form>
+    </div></div>
+    
+    <div class="chart_wrapper">
+        <div class="container">
+            <button style="background-color: #23314c;" id="reload-button" class="button">
+                <div id="reload-svg-wrapper">
+                    <svg id="reload-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#bbbbbb"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
+                    </svg>
+                </div>
+            </button>
+            <div class="glossy-slider">
+                <button id="path-button" class="slider-btn active" data-chart="line">All Paths</button>
+                <button id="activity-button" class="slider-btn" data-chart="bar">Activity</button>
+                <div class="slider"></div>
+            </div>
+        </div>
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+
+
+
+{% endblock %}
