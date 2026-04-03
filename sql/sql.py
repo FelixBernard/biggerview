@@ -6,10 +6,10 @@ from sql.sql_token import SQL_TOKEN
 def init_query(query, parameters=None):
     err = False
     database =  mysql.connector.connect(
-        host=os.environ.get('DB_HOST'),
-        user=os.environ.get('DB_USER'),
-        passwd=os.environ.get('DB_PASSWORD'),
-        database=os.environ.get('DB_NAME'),
+        host=os.environ.get('DB_HOST') if os.environ.get('DB_HOST') == None else "localhost",
+        user=os.environ.get('DB_USER') if os.environ.get('DB_USER') == None else "root",
+        passwd=os.environ.get('DB_PASSWORD') if os.environ.get('DB_PASSWORD') == None else SQL_TOKEN,
+        database=os.environ.get('DB_NAME') if os.environ.get('DB_NAME') == None else "biggerview",
         auth_plugin='mysql_native_password',
         autocommit=False
     )
@@ -30,10 +30,10 @@ def insert_query(query, db=None):
 def universel_db_query(query, with_col_names:bool=True, parameters:tuple=None):
     err = False
     database = mysql.connector.connect(
-        host=os.environ.get('DB_HOST'),
-        user=os.environ.get('DB_USER'),
-        passwd=os.environ.get('DB_PASSWORD'),
-        database=os.environ.get('DB_NAME'),
+        host=os.environ.get('DB_HOST') if os.environ.get('DB_HOST') == None else "localhost",
+        user=os.environ.get('DB_USER') if os.environ.get('DB_USER') == None else "root",
+        passwd=os.environ.get('DB_PASSWORD') if os.environ.get('DB_PASSWORD') == None else SQL_TOKEN,
+        database=os.environ.get('DB_NAME') if os.environ.get('DB_NAME') == None else "biggerview",
         auth_plugin='mysql_native_password',
         # autocommit=False
     )

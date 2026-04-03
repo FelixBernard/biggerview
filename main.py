@@ -14,4 +14,4 @@ app.register_blueprint(views, url_prefix="/")
 app.register_blueprint(api, url_prefix="/api")
 
 if __name__ == '__main__':
-    app.run(port=8080, host="0.0.0.0", debug=False)
+    app.run(port=8099, host="0.0.0.0", debug=False)

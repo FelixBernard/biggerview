@@ -76,7 +76,7 @@ def before_request():
     #         pass
     pass
 
-@api.route("nimda/283bf3/login", methods = ['POST'])
+@api.route("admin/login", methods = ['POST'])
 def api_login():
     if request.method == 'POST':
         code = generate_confirmation_code(10)
@@ -146,7 +146,7 @@ def api_login():
             else:
                 return jsonify(create_post_response('error', 'anmeldung fehlgeschlagen (x87)', '/login')), 400
 
-@api.route("nimda/iaw34nef/log", methods = ['POST'])
+@api.route("admin/log", methods = ['POST'])
 def api_log():
     if request.method == 'POST':
         temp_user, response = set_up_user(request, make_response(""))
@@ -169,7 +169,7 @@ def api_log():
         else:
             abort(404)
 
-@api.route("nimda/iaw34nef/requests", methods = ['POST'])
+@api.route("admin/requests", methods = ['POST'])
 def api_request():
     if request.method == 'POST':
         temp_user, response = set_up_user(request, make_response(""))
@@ -190,7 +190,7 @@ def api_request():
             abort(404)
 
 
-@api.route("nimda/iaw34nep/activity", methods = ['POST'])
+@api.route("admin/activity", methods = ['POST'])
 def api_activity():
     if request.method == 'POST':
         temp_user, response = set_up_user(request, make_response(""))
@@ -216,7 +216,7 @@ def api_activity():
         else:
             abort(404)
 
-@api.route("nimda/t4e5hte/newkey", methods = ['POST'])
+@api.route("admin/newkey", methods = ['POST'])
 def api_newkey():
     abort(404)
     # if request.method == 'POST':

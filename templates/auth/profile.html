@@ -7,18 +7,18 @@
 
 <div class="admin_main">
     {% if user %}
-    {% if user.rank == "admin" %}
-        <p>Rank: {{user.rank}}</p>
-    {% endif %}
+        {% if user.rank == "admin" %}
+            <p>Rank: {{user.rank}}</p>
+        {% endif %}
 
-    {% if link %}
-        <a href="{{link}}">
-            <button class="button">Log Table</button>
-        </a>
-        <a href="/3rqjdf/{{link}}">
-            <button class="button">Login Link</button>
-        </a>
-    {% endif %}
+        {% if link %}
+            <a href="/log">
+                <button class="button">Log Table</button>
+            </a>
+            <a href="/login">
+                <button class="button">Login Link</button>
+            </a>
+        {% endif %}
     {% endif %}
 </div>
 

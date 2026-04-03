@@ -35,8 +35,6 @@ def create_general_admin_key_table():
 def create_data_table(user, name) -> bool:
     init_query("CREATE TABLE data (amount float, bankkonto float, day int, month int, year int, info text, full_year text, transsaction_id int)")
 
-def create_user_invoice_db(id) -> bool:
-    init_query("CREATE TABLE user (name text, id int, infos text, rank text)")
 
 # def create_user_log_db(rank:chr, id) -> bool:
 #     with sqlite3.connect('data/user/individual/'+rank+id+'/invoice'+id+'.db') as database:
@@ -45,25 +43,6 @@ def create_user_invoice_db(id) -> bool:
 def create_member_folder(id):
     os.makedirs(f'data/user/individual/m{id}')
 
-
-# def create_shop_product_table():
-#     init_query("CREATE TABLE product (name text, product_id text, buy_price float, buy_sale bool, buy_sale_percent float, buy_sale_price float, rent_price float, rent_sale bool, rent_sale_percent float, rent_sale_price float, description text, to_rent bool, to_buy bool, new_flag bool, height float, width float, deepths float, img text)", main_db_plus_database)
-
-# def create_shop_object_table():
-#     init_query("CREATE TABLE object (object_id text, rest text)", main_db_plus_database)
-
-# def create_shop_bundle_table():
-#     init_query("CREATE TABLE bundle (name text, bundle_id int, description text, img text)", main_db_plus_database)
-
-# def create_shop_item_table():
-#     init_query("CREATE TABLE item (item_id text, product_id_key text, added text, produced text)", main_db_plus_database)
-
-# def create_shop_include_table():
-#     init_query("CREATE TABLE include (bundle_id_key int, product_id_key int)", main_db_plus_database)
-
-
-def create_news_table():
-    init_query("CREATE TABLE news (id int, news_info text)")
 
 def create_blocked_ip_table():
     init_query("CREATE TABLE blockedip (id int not null Auto_increment, ip text, time_stemp text, PRIMARY KEY (id))")
@@ -75,4 +54,4 @@ def create_errlog_table():
     init_query("CREATE TABLE errlog (time text, kind text, status text, massage text)")
 
 def create_requestlog_table():
-    init_query("CREATE TABLE requestlog (time text,  kind text, status text, ip text, useragent text)")
+    init_query("CREATE TABLE requestlog (time text,  kind text, status text, ip text, useragent text, path text)")

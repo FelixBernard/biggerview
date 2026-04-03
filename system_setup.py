@@ -14,9 +14,9 @@ def token_files():
 
 def create_database():
     database = mysql.connector.connect(
-        host=os.environ.get('DB_HOST'),
-        user=os.environ.get('DB_USER'),
-        passwd=os.environ.get('DB_PASSWORD'),
+        host=os.environ.get('DB_HOST') if os.environ.get('DB_HOST') == None else "localhost",
+        user=os.environ.get('DB_USER') if os.environ.get('DB_USER') == None else "root",
+        passwd=os.environ.get('DB_PASSWORD') if os.environ.get('DB_PASSWORD') == None else SQL_TOKEN,
         auth_plugin='mysql_native_password'
     )
     try:
