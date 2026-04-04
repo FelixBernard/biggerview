@@ -2,8 +2,18 @@ import flask
 import os
 from views import views
 from api import api
+import system
 
 app = flask.Flask(__name__)
+
+# Prüfe, ob die Datenbank bereits initialisiert wurde
+if not os.getenv("DB_INITIALIZED", "false") == "true":
+    print("Erstes Mal: Datenbank wird konfiguriert...")
+    system.init_server(False)
+    # Setze die Umgebungsvariable (nur für zukünftige Container-Starts)
+    # Hinweis: Das wirkt nur im aktuellen Container, nicht im Image!
+    os.environ["DB_INITIALIZED"] = "true"
+    print("Datenbank konfiguriert!")
 
 app.config['MYSQL_DATABASE_HOST'] = os.environ.get('DB_HOST')
 app.config['MYSQL_DATABASE_USER'] = os.environ.get('DB_USER')

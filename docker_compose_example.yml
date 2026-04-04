@@ -3,9 +3,9 @@ version: '0.9'
 
 services:
   web:
-    build: .
+    image: biggerviewtest
     ports:
-      - "3298:8099"
+      - "3298:8080"
     environment:
       DB_HOST: db
       DB_USER: flaskuser

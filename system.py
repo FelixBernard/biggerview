@@ -9,9 +9,8 @@ from server_config import SALT, COOKIE_KEY
 def count_clients():
     return 0
 
-def init_server():
+def init_server(set_admin_manually:bool=True):
     # Alle DB's für Nutzer erzeugen
-    # init_files.create_database('fw')
     init_files.create_general_user_table()
     init_files.create_general_client_table()
     init_files.create_general_client_session_id_table()
@@ -20,17 +19,20 @@ def init_server():
     init_files.create_general_admin_table()
     init_files.create_general_admin_session_id_table()
     init_files.create_general_admin_key_table()
-    # Admin festlegen
-    new_admin()
-
-    # News Datenbank
-    init_files.create_news_table()
-
+    
     # System Datenbanken
     init_files.create_blocked_ip_table()
     init_files.create_log_table()
     init_files.create_errlog_table()
     init_files.create_requestlog_table()
+
+    # Admin festlegen
+    if set_admin_manually:
+        new_admin()
+    else:
+        new_prep_admin()
+
+
 
 def init_session():
     init_files.create_general_client_session_id_table()
@@ -102,6 +104,14 @@ def new_admin():
     print(f'Das ist der Admin key (Als "{COOKIE_KEY}" cookie im Browser anlegen)', admin.key)
     sql.insert_general_user_table(admin.email, hash_in(f'{password}{SALT}'))
     # sql.init_query(f"Update adminveri set active = 1 where id = %s", (admin.id,)) -- weil der erste Admin so rein darf?
+
+def new_prep_admin():
+    e_mail = "admin@admin.com"
+    password = "admin"
+    admin = Admin(email=e_mail)
+    admin.set_new_admin(first=True)
+    print(f'Das ist der Admin key (Als "{COOKIE_KEY}" cookie im Browser anlegen)', admin.key)
+    sql.insert_general_user_table(admin.email, hash_in(f'{password}{SALT}'))
 
 def try_info():
     sql.tryyy_info()

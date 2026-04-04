@@ -22,4 +22,4 @@ COPY . .
 ENV PORT=8080
 EXPOSE 3298
 
-CMD ["python3", "system_setup.py", "create_db", "&" ,"python3", "main.py"]
+CMD ["python3", "main.py"]

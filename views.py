@@ -4,7 +4,7 @@ from flask import jsonify, request, render_template, make_response, send_file, s
 from scripts.user_setup import set_up_user
 from scripts.func import generate_confirmation_code
 from server_config import *
-from sql.sql import insert_log, insert_request_log
+from sql.sql import insert_log, insert_request_log, universel_db_query
 from user.user import Admin
 
 views = flask.Blueprint(__name__, "views")
