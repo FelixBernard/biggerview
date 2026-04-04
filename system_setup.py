@@ -1,4 +1,5 @@
 import os
+import sys
 import mysql
 import mysql.connector
 from sql.sql_token import SQL_TOKEN
@@ -13,29 +14,45 @@ def token_files():
     #     datei.writelines(f"TOKEN = '{google_token}'")
 
 def create_database():
-    database = mysql.connector.connect(
-        host=os.environ.get('DB_HOST') if os.environ.get('DB_HOST') == None else "localhost",
-        user=os.environ.get('DB_USER') if os.environ.get('DB_USER') == None else "root",
-        passwd=os.environ.get('DB_PASSWORD') if os.environ.get('DB_PASSWORD') == None else SQL_TOKEN,
-        auth_plugin='mysql_native_password'
-    )
     try:
-        curser = database.cursor()
-        curser.execute('CREATE DATABASE biggerview')
-    finally:
-        curser.close()
-        database.close()
+        database = mysql.connector.connect(
+            host=os.environ.get('DB_HOST'),
+            user=os.environ.get('DB_USER'),
+            passwd=os.environ.get('DB_PASSWORD'),
+            auth_plugin='mysql_native_password'
+        )
+        try:
+            curser = database.cursor()
+            curser.execute('CREATE DATABASE biggerview')
+        finally:
+            curser.close()
+            database.close()
+    except mysql.connector.Error as err:
+        print(f"Error: {err} -- no database created")
 
 if __name__ == '__main__':
     dic = {
-        'add token files': token_files,
-        'create db': create_database
+        'add_token_files': token_files,
+        'create_db': create_database
     }
-    while ((i := input('aktion(quit zum beenden): ')) != 'quit'):
-        if i in dic:
-            dic[i]()
+    # setup_server.py
+
+
+    if len(sys.argv) > 1:
+        sys_input = sys.argv[1]
+        if sys_input in dic:
+            dic[sys_input]()
         else:
             print('not in command list')
             print('--------------')
             for i in dic:
                 print(i)
+    else:
+        while ((i := input('aktion(quit zum beenden): ')) != 'quit'):
+            if i in dic:
+                dic[i]()
+            else:
+                print('not in command list')
+                print('--------------')
+                for i in dic:
+                    print(i)

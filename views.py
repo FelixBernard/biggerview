@@ -16,9 +16,9 @@ def before():
 
 @views.route("/")
 def main():
-    # tmp_user, response = set_up_user(request, make_response(""))
-    # response.set_data(render_template("main/index.html", user=tmp_user))
-    return render_template("main/index.html")
+    tmp_user, response = set_up_user(request, make_response(""))
+    response.set_data(render_template("main/index.html", user=tmp_user))
+    return tmp_user.response
 
 @views.route("/projects")
 def projects():

@@ -1,24 +1,27 @@
+name: biggerview
 version: '0.9'
 
 services:
   web:
     build: .
     ports:
-      - "8080:8080"
+      - "3298:8080"
     environment:
-      DB_HOST: db
+      DB_HOST: localhost
       DB_USER: flaskuser
       DB_PASSWORD: deinpasswort
-      DB_NAME: flaskdb
+      DB_NAME: biggerview
     depends_on:
       - db
-    restart: unless-stopped
+    # restart: unless-stopped
 
   db:
     image: mysql:8.0
+    ports:
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: rootpasswort
-      MYSQL_DATABASE: flaskdb
+      MYSQL_DATABASE: biggerview
       MYSQL_USER: flaskuser
       MYSQL_PASSWORD: deinpasswort
     volumes:
