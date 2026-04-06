@@ -2,7 +2,6 @@ import os
 import sys
 import mysql
 import mysql.connector
-from sql.sql_token import SQL_TOKEN
 
 def token_files():
     print("not implemented")
@@ -30,10 +29,33 @@ def create_database():
     except mysql.connector.Error as err:
         print(f"Error: {err} -- no database created")
 
+def delete_database():
+    try:
+        database = mysql.connector.connect(
+            host=os.environ.get('DB_HOST'),
+            user=os.environ.get('DB_USER'),
+            passwd=os.environ.get('DB_PASSWORD'),
+            auth_plugin='mysql_native_password'
+        )
+        try:
+            curser = database.cursor()
+            curser.execute('CREATE DATABASE biggerview')
+        finally:
+            curser.close()
+            database.close()
+    except mysql.connector.Error as err:
+        print(f"Error: {err} -- no database created")
+
+def rebuilt_database():
+    delete_database()
+    create_database()
+
 if __name__ == '__main__':
     dic = {
         'add_token_files': token_files,
-        'create_db': create_database
+        'create_db': create_database,
+        'delete_db': delete_database,
+        'rebuilt_db': rebuilt_database
     }
     # setup_server.py
 

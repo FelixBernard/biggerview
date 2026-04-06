@@ -4,6 +4,5 @@ infos_to_setup.txt
 nutzer*
 server_config.py
 sql/sql_token.py
-scripts/user_setup.py
 /.env
 /.vscode

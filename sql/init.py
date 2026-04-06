@@ -35,6 +35,8 @@ def create_general_admin_key_table():
 def create_data_table(user, name) -> bool:
     init_query("CREATE TABLE data (amount float, bankkonto float, day int, month int, year int, info text, full_year text, transsaction_id int)")
 
+def create_temp_path_table():
+    init_query("CREATE TABLE temppath (id int, time_stemp TIMESTEMP)")
 
 # def create_user_log_db(rank:chr, id) -> bool:
 #     with sqlite3.connect('data/user/individual/'+rank+id+'/invoice'+id+'.db') as database:

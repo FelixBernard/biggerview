@@ -23,7 +23,7 @@ def main():
 @views.route("/projects")
 def projects():
     tmp_user, response = set_up_user(request, make_response(""))
-    response.set_data(render_template("main/projects.html", user=tmp_user, link=SECRET_PATH))
+    response.set_data(render_template("main/projects.html", user=tmp_user))
     return tmp_user.response
 
 @views.route("/profile")
@@ -33,7 +33,7 @@ def profile():
         response.set_data(render_template("main/profile.html"))
         return response
     elif tmp_user.rank == 'admin':
-        response.set_data(render_template("auth/profile.html", user=tmp_user, link=SECRET_PATH))
+        response.set_data(render_template("auth/profile.html", user=tmp_user))
         return response
     else:
         abort(400)
@@ -45,7 +45,7 @@ def secret():
     tmp_user, response = set_up_user(request, make_response(""))
     if tmp_user.rank != "admin":
         abort(404)
-    response.set_data(render_template("nimda/log.html", user=tmp_user, link=SECRET_PATH))
+    response.set_data(render_template("nimda/log.html", user=tmp_user))
     insert_log(time=datetime.now(timezone.utc), kind="INFO", status="passed", mas="secret page accessed {ip: " + request.access_route[0] + ", cf-ip: " + str(request.headers.get('Cf-Connecting-Ip')) + "} as admin with code: " + code)
     return response
 
@@ -53,7 +53,7 @@ def secret():
 def secret_login():
     insert_log(time=datetime.now(timezone.utc), kind="INFO", status="precheck", mas="login secret page accessed {ip: " + request.access_route[0] + ", cf-ip: " + str(request.headers.get('Cf-Connecting-Ip')) + "}")
     tmp_user, response = set_up_user(request, make_response(""))
-    response.set_data(render_template("auth/login.html", user=tmp_user, link=SECRET_PATH))
+    response.set_data(render_template("auth/login.html", user=tmp_user))
     #print(response.cookies.get("firstacces"))
     return response
 
@@ -61,7 +61,7 @@ def secret_login():
 def admin():
     tmp_user, response = set_up_user(request, make_response(""))
     if tmp_user.rank == "admin" and type(tmp_user) == Admin:
-        response.set_data(render_template("nimda/nimda.html", user=tmp_user, link=SECRET_PATH))
+        response.set_data(render_template("nimda/nimda.html", user=tmp_user))
         return response
     else:
         abort(404)
@@ -69,7 +69,7 @@ def admin():
 @views.route("/ip")
 def ip():
     tmp_user, response = set_up_user(request, make_response(""))
-    response.set_data(render_template("test/ip.html", user=tmp_user, access_route_zero=request.access_route[0], access_route=request.access_route, remote_addr=request.remote_addr, request=request, link=SECRET_PATH))
+    response.set_data(render_template("test/ip.html", user=tmp_user, access_route_zero=request.access_route[0], access_route=request.access_route, remote_addr=request.remote_addr, request=request))
     return response
 
 # @views.route("/pdf")
