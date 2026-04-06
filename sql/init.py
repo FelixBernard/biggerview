@@ -38,6 +38,9 @@ def create_data_table(user, name) -> bool:
 def create_temp_path_table():
     init_query("CREATE TABLE temppath (id int, time_stemp TIMESTEMP)")
 
+def create_diray_table():
+    init_query("CREATE TABLE diray (time_stemp DATE, diraytext text, flags text, sleepscore int, sleeptime TIMESTEMP, ,PRIMARY KEY (time_stemp))")
+
 # def create_user_log_db(rank:chr, id) -> bool:
 #     with sqlite3.connect('data/user/individual/'+rank+id+'/invoice'+id+'.db') as database:
 #         database.execute("CREATE TABLE user (ip text, time_stemp text, side text)")
