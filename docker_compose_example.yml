@@ -11,6 +11,7 @@ services:
       DB_USER: flaskuser
       DB_PASSWORD: deinpasswort
       DB_NAME: biggerview
+      DB_INIZIALIZED: false
       PYTHONUNBUFFERED: "1"
     depends_on:
       db:

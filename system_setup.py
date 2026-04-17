@@ -39,7 +39,7 @@ def delete_database():
         )
         try:
             curser = database.cursor()
-            curser.execute('CREATE DATABASE biggerview')
+            curser.execute('DROP DATABASE biggerview')
         finally:
             curser.close()
             database.close()

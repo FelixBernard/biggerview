@@ -2,16 +2,17 @@ from user.user import Admin, Member, Client
 from server_config import *
 from sql import sql
 from datetime import datetime, timedelta
+from server_config import *
 
 def set_up_user(request, response):
-    if request.cookies.get(SECRET_KEY) == SECRET_VALUE:
+    if request.cookies.get(ADMIN_KEY) != None:
         id = sql.search_for_admin_cookie(request.cookies.get("bv_user"))
         if (id == -1):
             return new_client(request=request, response=response)
         tmp_user = Admin(request=request, response=response)
         return tmp_user, response
     else:
-        id = sql.search_for_client_cookie("client", request.cookies.get("bv_user"))
+        id = sql.search_for_client_cookie(request.cookies.get("bv_user"))
         if (id == -1):
             return new_client(request=request, response=response)
         tmp_user = Client(request=request, response=response)

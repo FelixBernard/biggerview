@@ -5,6 +5,9 @@ from sql.sql import init_query # type: ignore
 #def create_database(name) -> bool:
 #    init_query(f"CREATE DATABASE {name}", main_db_minus_database)
 
+def create_system_table() -> bool:
+    init_query("CREATE TABLE bvsystem (adminkey text, salt text)")
+
 def create_general_user_table() -> bool:
     init_query("CREATE TABLE user (email text, password text)")
 

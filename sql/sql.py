@@ -1,7 +1,6 @@
 # from sql.db_connector import *
 import os
 import mysql.connector
-from sql.sql_token import SQL_TOKEN
 
 def init_query(query, parameters=None):
     err = False
@@ -33,7 +32,7 @@ def insert_query(query, db=None):
 
 def universel_db_query(query, with_col_names:bool=True, parameters:tuple=None):
     err = False
-    print(os.environ.get('DB_HOST'), os.environ.get('DB_USER'), os.environ.get('DB_PASSWORD'), os.environ.get('DB_NAME'))
+    # print(os.environ.get('DB_HOST'), os.environ.get('DB_USER'), hash_in(os.environ.get('DB_PASSWORD')) if os.environ.get('DB_PASSWORD') == '' or os.environ.get('DB_PASSWORD') is None else "No password set", os.environ.get('DB_NAME'))
     try:
         database = mysql.connector.connect(
             host=os.environ.get('DB_HOST'),
@@ -68,9 +67,7 @@ def universel_db_query(query, with_col_names:bool=True, parameters:tuple=None):
         cursor.close()
         database.close()
         return results, err
-    
-def universel_db_query_on_maindb(query):
-    return universel_db_query(query)
+
 
 #print(universel_db_query("select * from functable;"))
 

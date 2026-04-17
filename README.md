@@ -5,6 +5,20 @@ We all know that little but static progress is the key to become the best versio
 
 I recommand to use the docker to run this app.
 
+## Setup
+
+# Bottomup Docker
+
+I recommand docker for easy installing, maintaining and seperation
+
+To use docker get the docker_compose_example.yml file and change the root db password and the user db password
+
+# Already got a MYSQL DB
+
+With docker take the docker_compose_example_without_db (!) file again, activate auth_with_password
+
+# Already got a MYSQL DB and not Docker
+
 ## Technical Deepdive
 
 not yet
