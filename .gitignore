@@ -6,3 +6,4 @@ server_config.py
 sql/sql_token.py
 /.env
 /.vscode
+env_set.bash

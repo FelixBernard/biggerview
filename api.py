@@ -34,7 +34,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def is_admin(request) -> bool:
-    key = request.cookies.get(COOKIE_KEY)
+    key = request.cookies.get(ADMIN_KEY)
     cookie = request.cookies.get('user')
     if key == None:
         return False
@@ -88,7 +88,6 @@ def api_login():
             data = request.get_json()
             current_email = data['e-mail']
             current_password = data['password']
-            admin_key = request.cookies.get(COOKIE_KEY)
         except:
             sql.insert_log(time=datetime.now(timezone.utc), kind="WARN", status="login failed", mas="could not extract data from json in api_login; code:" + code)
             return jsonify(create_post_response('error', 'anmeldung fehlgeschlagen ' + code, '/login')), 400
@@ -100,21 +99,12 @@ def api_login():
         if found_err:
             sql.insert_log(time=datetime.now(timezone.utc), kind="WARN", status="login failed", mas="email not found in db in api_login; code:" + code)
             return jsonify(create_post_response('error', 'anmeldung fehlgeschlagen ' + code, '/login')), 400
-        
 
-        if admin_key != None:
-            id, a_err = sql.get_id('admin', found_email)
-            data, k_err = sql.get_admin_key_and_status(id)
-            if a_err or k_err:
-                sql.insert_log(time=datetime.now(timezone.utc), kind="WARN", status="login failed", mas="admin key error in api_login with admin-error " + str(a_err) + " and data-error " + str(k_err) + "; code:" + code)
-                return jsonify(create_post_response('error', 'id error on admin ' + code, '/login')), 400
-            found_key = None
-            status = True
-            for ak in data:
-                if (ak['veri'] == admin_key):
-                    found_key = ak['veri']
-                    status = bool(ak['active'])
-            if hash_in(current_password + SALT) == found_password_hash and admin_key == found_key and not status:
+        id, a_err = sql.get_id('admin', found_email)
+        if not a_err:
+            # sql.insert_log(time=datetime.now(timezone.utc), kind="WARN", status="login failed", mas="admin key error in api_login with admin-error " + str(a_err) + "; code:" + code)
+            # return jsonify(create_post_response('error', 'id error on admin ' + code, '/login')), 400
+            if hash_in(current_password + SALT) == found_password_hash:
                 # send flag mail
                 temp_admin = Admin(id=id, email=found_email)
                 temp_admin.ip_adress = request.access_route[0]
@@ -123,28 +113,26 @@ def api_login():
                 sql.init_query(f"Update adminveri SET active = 1 where id = '{id}'")
                 respp = jsonify(create_post_response('ok', 'erfolgreicher login', '/', temp_cookie))
                 respp.set_cookie('user', temp_cookie, samesite='Strict', expires=datetime.now() + timedelta(days=90), httponly=True, secure=True)
-                respp.set_cookie(COOKIE_KEY, admin_key, samesite='Strict', expires=datetime.now() + timedelta(days=900), httponly=True, secure=True)
+                respp.set_cookie('isauth', 'true', samesite='Strict', expires=datetime.now() + timedelta(days=900), httponly=True, secure=True)
                 return respp, 200
             else:
                 # sql.insert_blocked_ip(request.access_route[0], datetime.now(timezone.utc))
                 sql.insert_log(time=datetime.now(timezone.utc), kind="WARN", status="login failed", mas="admin login failed in api_login hash or key or status not matching; code:" + code)
-                return jsonify(create_post_response('error', 'anmeldung fehlgeschlagen ' + code, url='/login')), 400
+                return jsonify(create_post_response('error', 'anmeldung fehlgeschlagen ' + code, url='/login')), 400 
+        id, err = sql.get_id('member', found_email)
+        if err:
+            # kein id gefunden, obwohl email gefunden wurde, das sollte nicht passieren
+            return jsonify(create_post_response('error', 'anmeldung fehlgeschlagen (667)', '/login')), 400
+        if hash_in(current_password + SALT) == found_password_hash:
+            temp_member = Member()
+            temp_member.ip_adress = request.access_route[0]
+            temp_cookie = temp_member.create_member_session_id()
+            sql.insert_general_member_session_id_table(id, temp_cookie, request.access_route[0], datetime.now(timezone.utc))
+            resp = jsonify(create_post_response('ok', 'angemeldet', '/profile', temp_cookie))
+            resp.set_cookie('user', temp_cookie, samesite='Strict', expires=datetime.now() + timedelta(days=90))
+            return resp, 200
         else:
-            id, err = sql.get_id('member', found_email)
-            if err:
-                # kein id gefunden, obwohl email gefunden wurde, das sollte nicht passieren
-                # oder ein admin hat seinen key nicht
-                return jsonify(create_post_response('error', 'anmeldung fehlgeschlagen (667)', '/login')), 400
-            if hash_in(current_password + SALT) == found_password_hash:
-                temp_member = Member()
-                temp_member.ip_adress = request.access_route[0]
-                temp_cookie = temp_member.create_member_session_id()
-                sql.insert_general_member_session_id_table(id, temp_cookie, request.access_route[0], datetime.now(timezone.utc))
-                resp = jsonify(create_post_response('ok', 'angemeldet', '/profile', temp_cookie))
-                resp.set_cookie('user', temp_cookie, samesite='Strict', expires=datetime.now() + timedelta(days=90))
-                return resp, 200
-            else:
-                return jsonify(create_post_response('error', 'anmeldung fehlgeschlagen (x87)', '/login')), 400
+            return jsonify(create_post_response('error', 'anmeldung fehlgeschlagen (x87)', '/login')), 400
 
 @api.route("admin/log", methods = ['POST'])
 def api_log():
@@ -216,27 +204,28 @@ def api_activity():
         else:
             abort(404)
 
-@api.route("admin/newkey", methods = ['POST'])
-def api_newkey():
-    abort(404)
-    # if request.method == 'POST':
-    #     temp_user = set_up_user(request, make_response(render_template("main/index.html")))
-    #     if temp_user.rank == 'admin' and type(temp_user) == Admin:
-    #         try:
-    #             data = request.get_json()
-    #             email = str(data['email'])
-    #             id, err = sql.get_id("admin", email)
-    #             masg = {
-    #                 "datas": email
-    #             }
-    #             if err:
-    #                 return jsonify(create_post_response('err', masg)), 400
-    #             return jsonify(create_post_response('ok', masg)), 200
-    #         except:
-    #             liste = []
-    #             return jsonify(create_post_response('err', liste)), 403
-    #     else:
-    #        abort(404)
+@api.route("admin/diray", methods = ['POST'])
+def api_diray():
+    if request.method == 'POST':
+        temp_user, response = set_up_user(request, make_response(""))
+        try:
+            data = request.get_json()
+            offset = int(data['offset'])
+            liste, err = sql.return_show_all("diray", 50, offset*50, "order by time_stemp desc")
+            if err:
+                return jsonify(create_post_response('err', masg)), 400
+            masg = {
+                "primary_key": "time_stemp",
+                "datas": liste
+            }
+            return jsonify(create_post_response('ok', masg)), 200
+        except:
+            # sql.insert_log(datetime.now(timezone.utc), 'api_log', 'err', 'Es konnte keine datenbank gefunden werden')
+            liste = []
+            return jsonify(create_post_response('err', liste)), 403
+        else:
+            abort(404)
+
     
 # @api.route("admin/db/<db>", methods= ['POST'])
 # def api_db(db:str):

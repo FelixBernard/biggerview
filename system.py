@@ -13,8 +13,8 @@ def init_server(set_admin_manually:bool=True):
     # Alle DB's für Nutzer erzeugen
     init_files.create_system_table()
     init_files.create_general_user_table()
-    init_files.create_general_client_table()
-    init_files.create_general_client_session_id_table()
+    # init_files.create_general_client_table()
+    # init_files.create_general_client_session_id_table()
     init_files.create_general_member_table()
     init_files.create_general_member_session_id_table()
     init_files.create_general_admin_table()
@@ -27,12 +27,16 @@ def init_server(set_admin_manually:bool=True):
     init_files.create_errlog_table()
     init_files.create_requestlog_table()
 
-    admin_key = generate_confirmation_code(20)
-    ADMIN_KEY = admin_key
-    salt = generate_confirmation_code(5)
-    SALT = salt
-    print("hier", ADMIN_KEY, SALT)
-    sql.insert_query("INSERT INTO bvsystem (adminkey, salt) VALUES (%s, %s)", (admin_key, salt))
+    config, err = sql.universel_db_query("SELECT * FROM bvsystem", False, None)
+    if len(config) != 0:
+        print("Configs bereits gesetzt")
+    else: 
+        admin_key = generate_confirmation_code(20)
+        ADMIN_KEY = admin_key
+        salt = generate_confirmation_code(5)
+        SALT = salt
+        print("ADMINKEY, SALT", ADMIN_KEY, SALT)
+        sql.insert_query("INSERT INTO bvsystem (adminkey, salt) VALUES (%s, %s)", (admin_key, salt))
 
     # Admin festlegen
     if set_admin_manually:

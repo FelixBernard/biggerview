@@ -83,7 +83,7 @@ def ip():
 
 @views.route("/static/js/admin/<path>")
 def admin_route(path):
-    if request.cookies.get(SECRET_KEY) == SECRET_VALUE:
+    if request.cookies.get(ADMIN_KEY) != None:
         return send_from_directory('static/js/nimda', path)
     abort(404)
 
