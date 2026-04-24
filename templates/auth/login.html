@@ -1,0 +1,19 @@
+{% extends "main/overlay.html" %} {% block content %}
+
+<div class="main-offset">
+    <div id="main-div" class="main-div">
+        
+        <div class="login-div">
+            <h1>Login</h1>
+            <p>Gib deinen Benutzernamen und dein Passwort ein, um dich einzuloggen.</p>
+            <form method="post" action="/login">
+                <input type="email" name="email" placeholder="E-Mail" required>
+                <input type="password" name="password" placeholder="Passwort" required>
+                <button type="submit">Einloggen</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -4,7 +4,7 @@ import sql.init as init_files
 import sql.sql as sql
 from user.user import Admin
 from scripts.func import hash_in, generate_confirmation_code
-from server_config import SALT, ADMIN_KEY
+from server_config_temp import SALT, ADMIN_KEY
 
 def count_clients():
     return 0
@@ -35,7 +35,6 @@ def init_server(set_admin_manually:bool=True):
         ADMIN_KEY = admin_key
         salt = generate_confirmation_code(5)
         SALT = salt
-        print("ADMINKEY, SALT", ADMIN_KEY, SALT)
         sql.insert_query("INSERT INTO bvsystem (adminkey, salt) VALUES (%s, %s)", (admin_key, salt))
 
     # Admin festlegen

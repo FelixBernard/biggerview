@@ -89,5 +89,9 @@ class Client(User):
             self.ip = self.request.access_route[0]
         sql.insert_general_client_session_id_table(client_session_id=self.session, ip=self.ip, time_stemp=datetime.now(timezone.utc), user_agent=self.request.headers.get("User-Agent"))
 
+    def load_new_client_dummy(self):
+        self.session = "a_hash"
+        self.ip = "1.1.1.1"
+
     def load_client(self, id=None, cookie=None):
         self.id, err = sql.get_client(id)

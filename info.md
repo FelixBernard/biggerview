@@ -1,12 +1,9 @@
 # to built server from ground up:
 
-1. fill server_config
-
-2. system_setup.py
+1. system_setup.py
     create db
 
-3. system.py
-    init server
+2. run the main.py app
 
 
 

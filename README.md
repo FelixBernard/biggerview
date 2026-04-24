@@ -20,9 +20,9 @@ With docker take the docker_compose_example_without_db (!) file again, activate 
 ## Already got a MYSQL DB and not Docker
 
 Without docker just 
-1.take this repo code
+1. take this repo code
 2. make a venv
-3. set env variables (take a look in info.md)
+3. set env variabels in venv (take a look at info.md)
 4. run main.py
 
 # Technical Deepdive

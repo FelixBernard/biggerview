@@ -10,16 +10,12 @@ app = flask.Flask(__name__)
 
 # Prüfe, ob die Datenbank bereits initialisiert wurde
 if not os.environ.get("DB_INITIALIZED") == "false":
-    print(os.environ.get("DB_INITIALIZED"))
     print("Erstes Mal: Datenbank wird konfiguriert...")
     system.init_server(False)
-    # Setze die Umgebungsvariable (nur für zukünftige Container-Starts)
-    # Hinweis: Das wirkt nur im aktuellen Container, nicht im Image!
     os.environ.setdefault("DB_INITIALIZED", "true")
     print("Datenbank konfiguriert!")
 
 system_config, err = universel_db_query("SELECT * FROM bvsystem", False, None)
-print(system_config, ": serverconfig")
 ADMIN_KEY = system_config[0]["adminkey"]
 SALT = system_config[0]["salt"]
 

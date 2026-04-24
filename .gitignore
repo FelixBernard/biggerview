@@ -7,3 +7,4 @@ sql/sql_token.py
 /.env
 /.vscode
 env_set.bash
+/bash/my_env.bash

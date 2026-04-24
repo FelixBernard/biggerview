@@ -216,6 +216,13 @@ def delete_password(email) -> None:
     insert_query(f"DELETE FROM user WHERE email = '{email}'")
 
 
+def search_for_temp_path(path):
+    foo, err = universel_db_query(f"SELECT * FROM temppath WHERE path = %s", False, (path,))
+    if err or len(foo) == 0:
+        return -1
+    return foo[0]
+
+
 def get_news(colum):
     foo, err = universel_db_query('Select * from news', False)
     if err or len(foo) == 0:

@@ -3,8 +3,8 @@ from datetime import datetime, timezone
 from flask import jsonify, request, render_template, make_response, send_file, send_from_directory, current_app, abort, redirect, url_for
 from scripts.user_setup import set_up_user
 from scripts.func import generate_confirmation_code
-from server_config import *
-from sql.sql import insert_log, insert_request_log, universel_db_query
+from server_config_temp import *
+from sql.sql import insert_log, insert_request_log, universel_db_query, search_for_temp_path
 from user.user import Admin
 
 views = flask.Blueprint(__name__, "views")
@@ -16,6 +16,8 @@ def before():
 
 @views.route("/")
 def main():
+    if request.cookies.get("bv_user") == None:
+        return redirect(url_for("views.login"))
     tmp_user, response = set_up_user(request, make_response(""))
     response.set_data(render_template("main/index.html", user=tmp_user))
     return tmp_user.response
@@ -50,7 +52,7 @@ def secret():
     return response
 
 @views.route("/login")
-def secret_login():
+def login():
     insert_log(time=datetime.now(timezone.utc), kind="INFO", status="precheck", mas="login secret page accessed {ip: " + request.access_route[0] + ", cf-ip: " + str(request.headers.get('Cf-Connecting-Ip')) + "}")
     tmp_user, response = set_up_user(request, make_response(""))
     response.set_data(render_template("auth/login.html", user=tmp_user))
@@ -70,6 +72,15 @@ def admin():
 def ip():
     tmp_user, response = set_up_user(request, make_response(""))
     response.set_data(render_template("test/ip.html", user=tmp_user, access_route_zero=request.access_route[0], access_route=request.access_route, remote_addr=request.remote_addr, request=request))
+    return response
+
+@views.route("/temp/<path>")
+def temp(path):
+    tmp_user, response = set_up_user(request, make_response(""))
+    exist = search_for_temp_path(path)
+    if exist == -1:
+        abort(404)  
+    response.set_data(render_template("test/temp.html", user=tmp_user, path=path))
     return response
 
 # @views.route("/pdf")
