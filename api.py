@@ -76,7 +76,7 @@ def before_request():
     #         pass
     pass
 
-@api.route("admin/login", methods = ['POST'])
+@api.route("login", methods = ['POST'])
 def api_login():
     if request.method == 'POST':
         code = generate_confirmation_code(10)

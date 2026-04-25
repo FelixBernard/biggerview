@@ -1,19 +1,34 @@
-{% extends "main/overlay.html" %} {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101828">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="msapplication-navbutton-color" content="#F1ECFE">
+    <title>BiggerView</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/main.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <!-- <script src="{{ url_for('static', filename='js/main/popup.js') }}" defer></script> -->
+</head>
+<body>
 
-<div class="main-offset">
     <div id="main-div" class="main-div">
         
         <div class="login-div">
             <h1>Login</h1>
             <p>Gib deinen Benutzernamen und dein Passwort ein, um dich einzuloggen.</p>
-            <form method="post" action="/login">
+            <form method="post" action="/api/login">
                 <input type="email" name="email" placeholder="E-Mail" required>
                 <input type="password" name="password" placeholder="Passwort" required>
-                <button type="submit">Einloggen</button>
+                <button type="submit" id="login-button">Einloggen</button>
             </form>
         </div>
 
     </div>
-</div>
 
-{% endblock %}
+
+</body>
+</html>
