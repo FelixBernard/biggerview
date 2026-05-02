@@ -79,6 +79,9 @@ def before_request():
 @api.route("login", methods = ['POST'])
 def api_login():
     if request.method == 'POST':
+        if request.cookies.get('isauth') == 'true':
+            return jsonify(create_post_response('error', 'already logged in', '/')), 400
+        
         code = generate_confirmation_code(10)
         # if not current_app.config['LOGIN_OPEN']:
         #     return jsonify(create_post_response('error', 'login geschlossen', '/')), 503
@@ -109,13 +112,14 @@ def api_login():
                 temp_admin = Admin(id=id, email=found_email)
                 temp_admin.ip_adress = request.access_route[0]
                 temp_cookie = temp_admin.create_admin_session()
+                temp_admin.key = sql.get_admin_key(id)
                 # temp_admin.send_warning_email()
                 sql.init_query(f"Update adminveri SET active = 1 where id = '{id}' and veri = '{temp_cookie}'")
-                respp = jsonify(create_post_response('ok', 'erfolgreicher login', '/', temp_cookie))
-                respp.set_cookie('bv_user', temp_cookie, samesite='Strict', expires=datetime.now() + timedelta(days=90), httponly=True)
-                respp.set_cookie(Config.ADMIN_KEY, temp_admin.key, samesite='Strict', expires=datetime.now() + timedelta(days=90), httponly=True)
-                respp.set_cookie('isauth', 'true', samesite='Strict', expires=datetime.now() + timedelta(days=90), httponly=True)
-                return respp, 200
+                resp = jsonify(create_post_response('ok', 'erfolgreicher login', '/', temp_cookie))
+                resp.set_cookie('bv_user', temp_cookie, samesite='Strict', expires=datetime.now() + timedelta(days=90), httponly=True)
+                resp.set_cookie(Config.ADMIN_KEY, temp_admin.key, samesite='Strict', expires=datetime.now() + timedelta(days=90), httponly=True)
+                resp.set_cookie('isauth', 'true', samesite='Strict', expires=datetime.now() + timedelta(days=90), httponly=True)
+                return resp, 200
             else:
                 # sql.insert_blocked_ip(request.access_route[0], datetime.now(timezone.utc))
                 sql.insert_log(time=datetime.now(timezone.utc), kind="WARN", status="login failed", mas="admin login failed in api_login hash or key or status not matching; code:" + code)
@@ -206,27 +210,44 @@ def api_activity():
         else:
             abort(404)
 
-@api.route("admin/diray", methods = ['POST'])
-def api_diray():
+@api.route("diary", methods = ['POST'])
+def api_diary():
     if request.method == 'POST':
         temp_user, response = set_up_user(request, make_response(""))
         try:
             data = request.get_json()
             offset = int(data['offset'])
-            liste, err = sql.return_show_all("diray", 50, offset*50, "order by time_stemp desc")
+            liste, err = sql.universel_db_query(f"SELECT * FROM diary where user_id = %s order by date desc limit 50 offset %s", True, (temp_user.id, offset*50))
+            print(type(liste[1]['date']))
             if err:
                 return jsonify(create_post_response('err', masg)), 400
+            try:
+                for entry in liste[1:]:
+                    entry['date'] = entry['date'].strftime('%a, %Y.%m.%d')
+            except:
+                print('could not format date')
             masg = {
-                "primary_key": "time_stemp",
+                "primary_key": "date",
                 "datas": liste
             }
             return jsonify(create_post_response('ok', masg)), 200
-        except:
+        except Exception as e:
             # sql.insert_log(datetime.now(timezone.utc), 'api_log', 'err', 'Es konnte keine datenbank gefunden werden')
             liste = []
-            return jsonify(create_post_response('err', liste)), 403
-        else:
-            abort(404)
+            return jsonify(create_post_response(f'err', e)), 403
+        
+@api.route("today", methods = ['POST'])
+def api_today():
+    if request.method == 'POST':
+        temp_user, response = set_up_user(request, make_response(""))
+        try:
+            err = sql.insert_diary(date=datetime.now().date(), user_id=temp_user.id, diarytext="Heute", flags="none", sleepid=1, eatid=1)
+            if err:
+                return jsonify(create_post_response('err', [])), 400
+            return jsonify(create_post_response('ok', [])), 200
+        except Exception as e:
+            # sql.insert_log(datetime.now(timezone.utc), 'api_log', 'err', 'Es konnte keine datenbank gefunden werden')
+            return jsonify(create_post_response(f'err', e)), 403
 
     
 # @api.route("admin/db/<db>", methods= ['POST'])

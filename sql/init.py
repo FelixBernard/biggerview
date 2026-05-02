@@ -6,7 +6,7 @@ from sql.sql import init_query # type: ignore
 #    init_query(f"CREATE DATABASE {name}", main_db_minus_database)
 
 def create_system_table() -> bool:
-    init_query("CREATE TABLE IF NOT EXISTS bvsystem (adminkey text, salt text)")
+    init_query("CREATE TABLE IF NOT EXISTS bvsystem (adminkey text, salt text, adminprefix text)")
 
 def create_general_user_table() -> bool:
     init_query("CREATE TABLE IF NOT EXISTS user (email VARCHAR(254), password text, PRIMARY KEY (email))")
@@ -41,8 +41,8 @@ def create_data_table(user, name) -> bool:
 def create_temp_path_table():
     init_query("CREATE TABLE IF NOT EXISTS temppath (id int, time_stemp TIMESTEMP)")
 
-def create_diray_table(user_id):
-    init_query(f"CREATE TABLE IF NOT EXISTS {user_id}diray (date DATE, diraytext text, flags text, sleepid int, eatid int, PRIMARY KEY (time_stemp), UNIQUE KEY (datum), UNIQUE KEY (sleepid))")
+def create_diary_table():
+    init_query(f"CREATE TABLE IF NOT EXISTS diary (user_id int, date DATE, diarytext text, flags text, sleepid int, eatid int)")
 
 # def create_user_log_db(rank:chr, id) -> bool:
 #     with sqlite3.connect('data/user/individual/'+rank+id+'/invoice'+id+'.db') as database:

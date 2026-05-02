@@ -1,6 +1,7 @@
 import os
 import time
 import sql.sql as sql
+import sql.init as init
 from scripts.func import hash_in, create_key
 from datetime import datetime, timezone
 from scripts.security import prevent_sql_inqeckt
@@ -24,9 +25,6 @@ class User:
         hashed_text = hash_in(temp_time)
         hashed_text = rank + hashed_text + str(self.ip)
         return hashed_text
-    
-    def create_tables(self):
-        sql.create_diray_table(self.id)
 
 class Admin(User):
     def __init__(self, id=None, email=None, request=None, response=None):
@@ -40,9 +38,10 @@ class Admin(User):
     def load_new_admin(self, email):
         print("TODO")
 
-    def load_admin(self, id=None, cookie=None):
-        #TODO
-        print("not implemented")
+    def load_admin(self, id=None, cookie=None, key=None):
+        self.id = id
+        self.cookie = cookie
+        self.key = key
 
     def set_new_admin(self, email=None, password="random", first:bool=False):
         self.entry_date = datetime.now(timezone.utc)
@@ -52,7 +51,7 @@ class Admin(User):
         sql.insert_general_admin_key_table(self.id, self.key, False, datetime.now(timezone.utc))
 
     def load_error_Admin(self):
-        # Alle Attribute auf Error setzen
+        # set all attributes to error
         self.id = -1
         self.key = "ERROR"
         self.email = "ERROR"
@@ -77,8 +76,8 @@ class Member(User):
         print("not implemented")
 
     def load_member(self, id=None, cookie=None):
-        #TODO
-        print("not implemented")
+        self.id = id
+        self.cookie = cookie
         
 class Client(User):
     def __init__(self, request=None, response=None):

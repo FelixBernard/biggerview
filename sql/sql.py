@@ -95,6 +95,9 @@ def insert_general_admin_session_id_table(admin_id, admin_session_id, time_stemp
 def insert_general_admin_key_table(admin_id, admin_key, active, time_stemp) -> bool:
     init_query(f"INSERT INTO adminveri VALUES ('{admin_id}', '{admin_key}', {active}, '{time_stemp}')")
 
+def insert_diary(user_id, date, diarytext, flags, sleepid, eatid) -> bool:
+    init_query(f"INSERT INTO diary VALUES (%s, %s, %s, %s, %s, %s)", (user_id, date, diarytext, flags, sleepid, eatid))
+
 def insert_sus_ip(ip, time, flag_count) -> None:
     print('sus ip')
     

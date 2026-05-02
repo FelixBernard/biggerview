@@ -1,4 +1,5 @@
-const button_show = document.querySelector('#show');
+const button_show = document.getElementById('show-diray');
+const button_today = document.getElementById('today');
 var before_db = "";
 var offset = 0;
 
@@ -6,16 +7,8 @@ button_show.addEventListener('click', (event) => {
     // document.getElementById('singup-form').submit();
   
     event.preventDefault();
-
-    const s = document.getElementById('db_select');
-    const v = s.value;
-    const db = s.options[v].text;
-    if (before_db != db) {
-        offset = 0;
-        before_db = db
-    }
     
-    const link = window.origin +'/api/diray';
+    const link = window.origin +'/api/diary';
     
     fetch(link, {
         method: 'POST',
@@ -27,6 +20,7 @@ button_show.addEventListener('click', (event) => {
     })
     .then(response => response.json())
     .then(data => {
+        table = document.getElementById('diray-table');
         table.innerHTML = '';
         let l = data.body.massage.datas;
         if (l.length == 0) {
@@ -88,6 +82,29 @@ button_show.addEventListener('click', (event) => {
     .catch(error => console.error('Error:', error));
 });
 
+button_today.addEventListener('click', (event) => {
+    // document.getElementById('singup-form').submit();
+  
+    event.preventDefault();
+    
+    const link = window.origin +'/api/today';
+    
+    fetch(link, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "offset": offset})
+    })
+    .then(response => response.json())
+    .then(data => {
+        button_show.click();
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+
 function delete_out_of_db(event) {
     // console.log('delete', event.id, event, event.target.closest('.button'));
     bu = event.target.closest('.button');
@@ -105,4 +122,9 @@ function minus_offset () {
 
 function zero_offset() {
     offset = 0;
+}
+
+window.onload = function() {
+    console.log("window loaded");
+    button_show.click();
 }

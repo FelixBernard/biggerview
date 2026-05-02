@@ -1,8 +1,10 @@
 {% extends "main/overlay.html" %} {% block content %}
-
+<script src="{{ url_for('static', filename='js/main/diray.js') }}" defer></script>
 <div class="main-offset">
     <div id="main-div" class="main-div">
-        
+        <button id="show-diray">Diray anzeigen</button>
+        <button id="today">Füge heute hinzu</button>
+        <table id="diray-table"></table>
     </div>
 </div>
 

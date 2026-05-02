@@ -11,14 +11,15 @@ def set_up_user(request, response):
         key = sql.search_for_admin_key(request.cookies.get(Config.ADMIN_KEY))
         if (id == -1 or key == -1):
             return new_client(request=request, response=response)
-        tmp_user = Admin(request=request, response=response)
+        tmp_user = Admin(id=id, request=request, response=response)
+        tmp_user.load_admin(id=id, cookie=request.cookies.get('bv_user'), key=request.cookies.get(Config.ADMIN_KEY))
         return tmp_user, response
     else:
         id = sql.search_for_member_cookie(request.cookies.get("bv_user"))
         if (id == -1):
             return new_client(request=request, response=response)
-        tmp_user = Client(request=request, response=response)
-        tmp_user.load_client(id)
+        tmp_user = Member(id=id, request=request, response=response)
+        tmp_user.load_member(id=id)
         return tmp_user, response
         
 

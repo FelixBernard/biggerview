@@ -20,6 +20,7 @@ def init_server(set_admin_manually:bool=True):
     init_files.create_general_admin_table()
     init_files.create_general_admin_session_id_table()
     init_files.create_general_admin_key_table()
+    init_files.create_diary_table()
     
     # System Datenbanken
     init_files.create_blocked_ip_table()
@@ -31,16 +32,16 @@ def init_server(set_admin_manually:bool=True):
 
     create_admin = False
     config, err = sql.universel_db_query("SELECT * FROM bvsystem", False, None)
-    print(config, "config")
     if len(config) != 0:
         Config.SALT = config[0]["salt"]
         Config.ADMIN_KEY = config[0]["adminkey"]
+        Config.ADMIN_PREFIX = config[0]["adminprefix"]
         print("Configs loaded")
     else: 
         Config.ADMIN_KEY = generate_confirmation_code(20)
         Config.SALT = generate_confirmation_code(5)
-        print(Config.ADMIN_KEY, Config.SALT)
-        sql.insert_query("INSERT INTO bvsystem (adminkey, salt) VALUES (%s, %s)", (Config.ADMIN_KEY, Config.SALT))
+        Config.ADMIN_PREFIX = generate_confirmation_code(9)
+        sql.insert_query("INSERT INTO bvsystem (adminkey, salt, adminprefix) VALUES (%s, %s, %s)", (Config.ADMIN_KEY, Config.SALT, Config.ADMIN_PREFIX))
         create_admin = True
         print("Configs set")
 
