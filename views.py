@@ -3,7 +3,8 @@ from datetime import datetime, timezone
 from flask import jsonify, request, render_template, make_response, send_file, send_from_directory, current_app, abort, redirect, url_for
 from scripts.user_setup import set_up_user
 from scripts.func import generate_confirmation_code
-from server_config_temp import *
+# from server_config_temp import *
+from config import Config
 from sql.sql import insert_log, insert_request_log, universel_db_query, search_for_temp_path
 from user.user import Admin
 
@@ -19,6 +20,8 @@ def main():
     if request.cookies.get("bv_user") == None:
         return redirect(url_for("views.login"))
     tmp_user, response = set_up_user(request, make_response(""))
+    if tmp_user.rank == "client":
+        return redirect(url_for("views.login"))
     response.set_data(render_template("main/index.html", user=tmp_user))
     return tmp_user.response
 
@@ -94,8 +97,8 @@ def temp(path):
 
 @views.route("/static/js/admin/<path>")
 def admin_route(path):
-    if request.cookies.get(ADMIN_KEY) != None:
-        return send_from_directory('static/js/nimda', path)
+    if request.cookies.get(Config.ADMIN_KEY) != None:
+        return send_from_directory('static/js/admin', path)
     abort(404)
 
 @views.route('/<path:path>')

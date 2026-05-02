@@ -4,7 +4,7 @@ import sql.init as init_files
 import sql.sql as sql
 from user.user import Admin
 from scripts.func import hash_in, generate_confirmation_code
-from server_config_temp import SALT, ADMIN_KEY
+from config import Config
 
 def count_clients():
     return 0
@@ -27,21 +27,31 @@ def init_server(set_admin_manually:bool=True):
     init_files.create_errlog_table()
     init_files.create_requestlog_table()
 
+    print("Datenbanken gecheckt/erstellt")
+
+    create_admin = False
     config, err = sql.universel_db_query("SELECT * FROM bvsystem", False, None)
+    print(config, "config")
     if len(config) != 0:
-        print("Configs bereits gesetzt")
+        Config.SALT = config[0]["salt"]
+        Config.ADMIN_KEY = config[0]["adminkey"]
+        print("Configs loaded")
     else: 
-        admin_key = generate_confirmation_code(20)
-        ADMIN_KEY = admin_key
-        salt = generate_confirmation_code(5)
-        SALT = salt
-        sql.insert_query("INSERT INTO bvsystem (adminkey, salt) VALUES (%s, %s)", (admin_key, salt))
+        Config.ADMIN_KEY = generate_confirmation_code(20)
+        Config.SALT = generate_confirmation_code(5)
+        print(Config.ADMIN_KEY, Config.SALT)
+        sql.insert_query("INSERT INTO bvsystem (adminkey, salt) VALUES (%s, %s)", (Config.ADMIN_KEY, Config.SALT))
+        create_admin = True
+        print("Configs set")
 
     # Admin festlegen
-    if set_admin_manually:
-        new_admin()
-    else:
-        new_prep_admin()
+    if create_admin:
+        if set_admin_manually:
+            new_admin()
+            print("Admin angelegt (manually)")
+        else:
+            new_prep_admin()
+            print("Admin angelegt (preparation)")
 
 
 
@@ -112,7 +122,7 @@ def new_admin():
     password = input('lege ein Admin password fest: ')
     admin = Admin(email=e_mail)
     admin.set_new_admin(first=True)
-    sql.insert_general_user_table(admin.email, hash_in(f'{password}{SALT}'))
+    sql.insert_general_user_table(admin.email, hash_in(f'{password}{Config.SALT}'))
     # sql.init_query(f"Update adminveri set active = 1 where id = %s", (admin.id,)) -- weil der erste Admin so rein darf?
 
 def new_prep_admin():
@@ -120,7 +130,8 @@ def new_prep_admin():
     password = "admin"
     admin = Admin(email=e_mail)
     admin.set_new_admin(first=True)
-    sql.insert_general_user_table(admin.email, hash_in(f'{password}{SALT}'))
+    sql.insert_general_user_table(admin.email, hash_in(f'{password}{Config.SALT}'))
+    print(f"Admin angelegt mit Email: {e_mail} und Passwort: {password}")
 
 def try_info():
     sql.tryyy_info()
@@ -190,6 +201,7 @@ if __name__ == '__main__':
         'search': ss,
         'all': all,
         'new admin': new_admin,
+        'new prep admin': new_prep_admin,
         'delete dbs': delete_all_dbs,
         'try_info': try_info,
         'query': sql_query,

@@ -2,12 +2,13 @@ from user.user import Admin, Member, Client
 from server_config import *
 from sql import sql
 from datetime import datetime, timedelta
-from server_config_temp import *
+# from server_config_temp import *
+from config import Config
 
 def set_up_user(request, response):
-    if request.cookies.get(ADMIN_KEY) != None:
+    if request.cookies.get(Config.ADMIN_KEY) != None:
         id = sql.search_for_admin_cookie(request.cookies.get("bv_user"))
-        key = sql.search_for_admin_key(request.cookies.get(ADMIN_KEY))
+        key = sql.search_for_admin_key(request.cookies.get(Config.ADMIN_KEY))
         if (id == -1 or key == -1):
             return new_client(request=request, response=response)
         tmp_user = Admin(request=request, response=response)

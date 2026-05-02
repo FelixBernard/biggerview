@@ -5,7 +5,7 @@ services:
   web:
     image: biggerviewtest
     ports:
-      - "3298:8080"
+      - "3298:8099"
     environment:
       DB_HOST: db
       DB_USER: flaskuser

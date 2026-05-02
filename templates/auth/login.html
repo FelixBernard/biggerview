@@ -11,6 +11,7 @@
     <title>BiggerView</title>
     <link rel="icon" href="{{ url_for('static', filename='img/main.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <script src="{{ url_for('static', filename='js/auth/login.js') }}" defer></script>
     <!-- <script src="{{ url_for('static', filename='js/main/popup.js') }}" defer></script> -->
 </head>
 <body>
@@ -21,8 +22,8 @@
             <h1>Login</h1>
             <p>Gib deinen Benutzernamen und dein Passwort ein, um dich einzuloggen.</p>
             <form method="post" action="/api/login">
-                <input type="email" name="email" placeholder="E-Mail" required>
-                <input type="password" name="password" placeholder="Passwort" required>
+                <input id="textbox_e-mail" type="email" name="email" placeholder="E-Mail" required>
+                <input id="textbox_password" type="password" name="password" placeholder="Passwort" required>
                 <button type="submit" id="login-button">Einloggen</button>
             </form>
         </div>

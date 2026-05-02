@@ -3,21 +3,14 @@ import os
 from views import views
 from api import api
 import system
-from server_config_temp import *
+# from config import Config
 from sql.sql import universel_db_query
 
 app = flask.Flask(__name__)
 
-# Prüfe, ob die Datenbank bereits initialisiert wurde
-if not os.environ.get("DB_INITIALIZED") == "false":
-    print("Erstes Mal: Datenbank wird konfiguriert...")
-    system.init_server(False)
-    os.environ.setdefault("DB_INITIALIZED", "true")
-    print("Datenbank konfiguriert!")
-
-system_config, err = universel_db_query("SELECT * FROM bvsystem", False, None)
-ADMIN_KEY = system_config[0]["adminkey"]
-SALT = system_config[0]["salt"]
+print("setup database")
+system.init_server(False)
+print("database setup complete")
 
 app.config['MYSQL_DATABASE_HOST'] = os.environ.get('DB_HOST')
 app.config['MYSQL_DATABASE_USER'] = os.environ.get('DB_USER')

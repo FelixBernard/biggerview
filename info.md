@@ -24,8 +24,11 @@ export DB_NAME=deine_lokale_datenbank
 python main.py
 
 
+docker built -t biggerviewtest ./
 
 # build docker compose
 
-1. docker-compose up --build
+1. (docker compose up --build   ---- idk)
+
+2. docker compose -f ./docker_compose_example.yml up
 

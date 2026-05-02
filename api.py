@@ -90,7 +90,7 @@ def api_login():
             current_password = data['password']
         except:
             sql.insert_log(time=datetime.now(timezone.utc), kind="WARN", status="login failed", mas="could not extract data from json in api_login; code:" + code)
-            return jsonify(create_post_response('error', 'anmeldung fehlgeschlagen ' + code, '/login')), 400
+            return jsonify(create_post_response('error', 'login failed ' + code, '/login')), 400
 
         # suchen nach email in email db, möchten keinen err provozieren
         found_email, found_password_hash, found_err = sql.search_for_user_email(current_email)
@@ -98,41 +98,43 @@ def api_login():
         # keine email gefunden
         if found_err:
             sql.insert_log(time=datetime.now(timezone.utc), kind="WARN", status="login failed", mas="email not found in db in api_login; code:" + code)
-            return jsonify(create_post_response('error', 'anmeldung fehlgeschlagen ' + code, '/login')), 400
+            return jsonify(create_post_response('error', 'login failed ' + code, '/login')), 400
 
         id, a_err = sql.get_id('admin', found_email)
         if not a_err:
             # sql.insert_log(time=datetime.now(timezone.utc), kind="WARN", status="login failed", mas="admin key error in api_login with admin-error " + str(a_err) + "; code:" + code)
             # return jsonify(create_post_response('error', 'id error on admin ' + code, '/login')), 400
-            if hash_in(current_password + SALT) == found_password_hash:
+            if hash_in(current_password + Config.SALT) == found_password_hash:
                 # send flag mail
                 temp_admin = Admin(id=id, email=found_email)
                 temp_admin.ip_adress = request.access_route[0]
                 temp_cookie = temp_admin.create_admin_session()
                 # temp_admin.send_warning_email()
-                sql.init_query(f"Update adminveri SET active = 1 where id = '{id}'")
+                sql.init_query(f"Update adminveri SET active = 1 where id = '{id}' and veri = '{temp_cookie}'")
                 respp = jsonify(create_post_response('ok', 'erfolgreicher login', '/', temp_cookie))
-                respp.set_cookie('user', temp_cookie, samesite='Strict', expires=datetime.now() + timedelta(days=90), httponly=True, secure=True)
-                respp.set_cookie('isauth', 'true', samesite='Strict', expires=datetime.now() + timedelta(days=900), httponly=True, secure=True)
+                respp.set_cookie('bv_user', temp_cookie, samesite='Strict', expires=datetime.now() + timedelta(days=90), httponly=True)
+                respp.set_cookie(Config.ADMIN_KEY, temp_admin.key, samesite='Strict', expires=datetime.now() + timedelta(days=90), httponly=True)
+                respp.set_cookie('isauth', 'true', samesite='Strict', expires=datetime.now() + timedelta(days=90), httponly=True)
                 return respp, 200
             else:
                 # sql.insert_blocked_ip(request.access_route[0], datetime.now(timezone.utc))
                 sql.insert_log(time=datetime.now(timezone.utc), kind="WARN", status="login failed", mas="admin login failed in api_login hash or key or status not matching; code:" + code)
-                return jsonify(create_post_response('error', 'anmeldung fehlgeschlagen ' + code, url='/login')), 400 
+                return jsonify(create_post_response('error', 'login failed ' + code, url='/login')), 400 
         id, err = sql.get_id('member', found_email)
         if err:
             # kein id gefunden, obwohl email gefunden wurde, das sollte nicht passieren
-            return jsonify(create_post_response('error', 'anmeldung fehlgeschlagen (667)', '/login')), 400
-        if hash_in(current_password + SALT) == found_password_hash:
+            return jsonify(create_post_response('error', 'login failed (667)', '/login')), 400
+        if hash_in(current_password + Config.SALT) == found_password_hash:
             temp_member = Member()
             temp_member.ip_adress = request.access_route[0]
             temp_cookie = temp_member.create_member_session_id()
             sql.insert_general_member_session_id_table(id, temp_cookie, request.access_route[0], datetime.now(timezone.utc))
-            resp = jsonify(create_post_response('ok', 'angemeldet', '/profile', temp_cookie))
-            resp.set_cookie('user', temp_cookie, samesite='Strict', expires=datetime.now() + timedelta(days=90))
+            resp = jsonify(create_post_response('ok', 'login successful', '/profile', temp_cookie))
+            resp.set_cookie('bv_user', temp_cookie, samesite='Strict', expires=datetime.now() + timedelta(days=90))
+            resp.set_cookie('isauth', 'true', samesite='Strict', expires=datetime.now() + timedelta(days=90), httponly=True)
             return resp, 200
         else:
-            return jsonify(create_post_response('error', 'anmeldung fehlgeschlagen (x87)', '/login')), 400
+            return jsonify(create_post_response('error', 'login failed', '/login')), 400
 
 @api.route("admin/log", methods = ['POST'])
 def api_log():

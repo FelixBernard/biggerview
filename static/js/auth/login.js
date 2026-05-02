@@ -1,21 +1,20 @@
-const button = document.getElementById('submit-button');
-const form = document.getElementById('singup-form');
+const button = document.getElementById('login-button');
 
 button.addEventListener('click', (event) => {
-  // document.getElementById('singup-form').submit();
+  // document.getElementById('login-form').submit();
     event.preventDefault();
 
     const email = document.getElementById('textbox_e-mail').value;
-    const password = document.getElementById('password').value;
+    const password = document.getElementById('textbox_password').value;
 
-    const link = window.origin + '/api/nimda/283bf3/login';
+    const link = window.origin + '/api/login';
     fetch(link, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ "e-mail": email, "password": password})
+        },
+        body: JSON.stringify({ "e-mail": email, "password": password })
     })
 
     .then(response => response.json())

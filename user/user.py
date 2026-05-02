@@ -24,6 +24,9 @@ class User:
         hashed_text = hash_in(temp_time)
         hashed_text = rank + hashed_text + str(self.ip)
         return hashed_text
+    
+    def create_tables(self):
+        sql.create_diray_table(self.id)
 
 class Admin(User):
     def __init__(self, id=None, email=None, request=None, response=None):
