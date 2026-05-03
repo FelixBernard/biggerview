@@ -1,3 +1,4 @@
+from datetime import datetime
 import sys
 import os
 import sql.init as init_files
@@ -187,6 +188,27 @@ def overview():
     print("Admins:")
     print(sql.universel_db_query(f"SELECT * FROM admin"))
 
+def add_diary_entry():
+    while (x := input("Möchten Sie einen Tagebucheintrag hinzufügen? (ja/nein): ")) != 'nein':
+        user_id = int(input("User ID: "))
+        date_str = input("Date (TT-MM-JJJJ): ")
+        
+        try:
+            formatted_date = datetime.strptime(date_str, "%d-%m-%Y").date()
+            
+            sql.insert_diary(
+                date=formatted_date, 
+                user_id=user_id, 
+                diarytext="Heute", 
+                flags="none", 
+                sleepid=1, 
+                eatid=1
+            )
+            print("Diary entry added.")
+            
+        except ValueError:
+            print("Fehler: Bitte das Datum im Format TT-MM-JJJJ eingeben (z.B. 01-05-2026).")
+
 if __name__ == '__main__':
     dic = {
         'init server': init_server,
@@ -210,7 +232,8 @@ if __name__ == '__main__':
         'bild loschen': delete_pic,
         'new news': new_news,
         'overview': overview,
-        'reqestlog': lambda: print(sql.universel_db_query("SELECT DATE_FORMAT(STR_TO_DATE(time, '%Y-%m-%d %H:%i:%s.%f'), '%Y-%m-%d %H:00:00') AS hour, COUNT(*) AS request_count FROM requestlog WHERE STR_TO_DATE(time, '%Y-%m-%d %H:%i:%s.%f') >= DATE_SUB(NOW(), INTERVAL 7 DAY) GROUP BY hour ORDER BY hour"))
+        'reqestlog': lambda: print(sql.universel_db_query("SELECT DATE_FORMAT(STR_TO_DATE(time, '%Y-%m-%d %H:%i:%s.%f'), '%Y-%m-%d %H:00:00') AS hour, COUNT(*) AS request_count FROM requestlog WHERE STR_TO_DATE(time, '%Y-%m-%d %H:%i:%s.%f') >= DATE_SUB(NOW(), INTERVAL 7 DAY) GROUP BY hour ORDER BY hour")),
+        'add diary entry': add_diary_entry
     }
     while ((i := input('aktion(quit zum beenden): ')) != 'quit'):
         if i in dic:

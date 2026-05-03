@@ -13,16 +13,25 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <!-- <script src="{{ url_for('static', filename='js/main/popup.js') }}" defer></script> -->
 </head>
-<body>
-    <div id="overnavbar">
-        <div id="navbar">
-            <a class="nav-link" href="/">Home</a>
-            <a class="nav-link" href="/projects">Projects</a>
-            <a class="nav-link" href="/profile">Profile</a>
+    <body>
+        <div id="overnavbar">
+            <div id="navbar">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/sleep">Sleep</a>
+                <a class="nav-link" href="/eat">Eat</a>
+                <a class="nav-link" href="/bank">Bank</a>
+            </div>
         </div>
-    </div>
 
-    {% block content %} {% endblock %}
+        <div id="placeholder-overnavbar">
+            <div id="placeholder-navbar">
+                <a class="placeholder-nav-link" href="/">Home</a>
+                <a class="placeholder-nav-link" href="/sleep">Sleep</a>
+                <a class="placeholder-nav-link" href="/eat">Eat</a>
+                <a class="placeholder-nav-link" href="/bank">Bank</a>
+            </div>
+        </div>
+        {% block content %} {% endblock %}
 
-</body>
+    </body>
 </html>

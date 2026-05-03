@@ -1,4 +1,4 @@
-const button_show = document.getElementById('show-diray');
+const button_show = document.getElementById('show-diary');
 const button_today = document.getElementById('today');
 var before_db = "";
 var offset = 0;
@@ -20,19 +20,25 @@ button_show.addEventListener('click', (event) => {
     })
     .then(response => response.json())
     .then(data => {
-        table = document.getElementById('diray-table');
+        table = document.getElementById('diary-table');
         table.innerHTML = '';
-        let l = data.body.massage.datas;
-        if (l.length == 0) {
+        let list = data.body.massage.datas;
+        if (list.length == 0) {
             let row = table.insertRow();
             let cell = row.insertCell();
             cell.textContent = 'Leere Liste';
         } else {
-            data.body.massage.datas.forEach(item => {
+            list.forEach(item => {
+                
                 let row = table.insertRow();
+                
                 for (let key in item) {
+                    const isHeader = (item['date'] === 'date');
                     let cell = row.insertCell();
-                    if (key == 'active') {
+                    if (isHeader) {
+                        cell.textContent = item[key];
+                    } 
+                    else if (key == 'active') {
                         let box = document.createElement('div');
                         box.setAttribute('class', 'activ-box');
                         let a_box = document.createElement('div');
@@ -48,12 +54,21 @@ button_show.addEventListener('click', (event) => {
                             cell.textContent = item[key];
                         }
                     } else {
-                        cell.textContent = item[key];
+                        let input = document.createElement('input');
+                        input.type = 'text';
+                        input.value = item[key];
+                        input.className = 'table-input'; // Für Styling in CSS
+
+                        // Optional: ID oder Name setzen, um Änderungen später zu speichern
+                        input.dataset.key = key;
+                        input.dataset.id = item[list.primary_key];
+
+                        cell.appendChild(input);
                     }
                 }
                 let buttonCell = row.insertCell();
                 // damit die erste reihe kein button hat, funktioniert leider nicht für db's die keine id haben
-                if (item['id'] == 'id'){
+                if (item['date'] == 'date'){
                     buttonCell.appendChild(document.createElement('p'));
                 }
                 else {
@@ -72,10 +87,6 @@ button_show.addEventListener('click', (event) => {
                 } else if (item['kind'] == 'ERR') {
                     row.setAttribute('class', 'errclass') 
                 }
-                // } else if (item['active'] == 1) {
-                //     console.log("aktive");
-                // }
-                
             });
         }
     })

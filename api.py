@@ -217,13 +217,12 @@ def api_diary():
         try:
             data = request.get_json()
             offset = int(data['offset'])
-            liste, err = sql.universel_db_query(f"SELECT * FROM diary where user_id = %s order by date desc limit 50 offset %s", True, (temp_user.id, offset*50))
-            print(type(liste[1]['date']))
+            liste, err = sql.universel_db_query(f"SELECT date, diarytext, flags, sleepid, eatid FROM diary where user_id = %s order by date desc limit 50 offset %s", True, (temp_user.id, offset*50))
             if err:
                 return jsonify(create_post_response('err', masg)), 400
             try:
                 for entry in liste[1:]:
-                    entry['date'] = entry['date'].strftime('%a, %Y.%m.%d')
+                    entry['date'] = entry['date'].strftime('%a, %d.%m.%Y')
             except:
                 print('could not format date')
             masg = {
