@@ -61,7 +61,44 @@ button_show.addEventListener('click', (event) => {
 
                         // Optional: ID oder Name setzen, um Änderungen später zu speichern
                         input.dataset.key = key;
-                        input.dataset.id = item[list.primary_key];
+                        input.dataset.id = item[data.body.massage.primary_key];
+
+                        // Update function
+                        input.onblur = function () {
+                            const newValue = this.value;
+                            const fieldName = this.dataset.key;
+                            const entryId = this.dataset.id;
+
+                            fetch('/api/update_diary', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    "id": entryId,
+                                    "field": fieldName,
+                                    "value": newValue
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === 'ok') {;
+                                    this.style.transition = "0.5s"; // Sanfter Übergang
+                                    this.style.boxShadow = "0 0 10px #1fff1f8d"; // Kurz grün aufleuchten lassen
+                                    this.style.backgroundColor = "#1fff1f8d"; // Kurz grün aufleuchten lassen
+                                    setTimeout(() => this.style.boxShadow = "none", 500);
+                                    setTimeout(() => this.style.backgroundColor = "transparent", 500);
+                                } else {
+                                    this.style.transition = "0.5s"; // Sanfter Übergang
+                                    this.style.boxShadow = "0 0 10px #ff1f1f8d"; // Kurz grün aufleuchten lassen
+                                    this.style.backgroundColor = "#ff2a2a8d"; // Kurz grün aufleuchten lassen
+                                    setTimeout(() => this.style.boxShadow = "none", 500);
+                                    setTimeout(() => this.style.backgroundColor = "transparent", 500);
+                                    console.error("Fehler beim Speichern:", data.msg);
+                                }
+                            })
+                            .catch(err => {
+                                console.error("Fehler beim Speichern:", err);
+                            });
+                        };
 
                         cell.appendChild(input);
                     }

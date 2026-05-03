@@ -248,6 +248,38 @@ def api_today():
             # sql.insert_log(datetime.now(timezone.utc), 'api_log', 'err', 'Es konnte keine datenbank gefunden werden')
             return jsonify(create_post_response(f'err', e)), 403
 
+@api.route('update_diary', methods=['POST'])
+def update_diary():
+    if request.method == 'POST':
+        temp_user, response = set_up_user(request, make_response(""))
+        data = request.get_json()
+        entry_id = datetime.strptime(data.get('id'), "%a, %d.%m.%Y").date()
+        field = data.get('field')
+        value = data.get('value')
+        print(entry_id, field, value, type(entry_id))
+        # Sicherheit: Nur bestimmte Spalten dürfen geändert werden
+        allowed_fields = ['diarytext', 'flags', 'sleepid', 'eatid']
+        if field not in allowed_fields:
+            return jsonify({"status": "err", "msg": "Ungültiges Feld"}), 400
+
+        # Falls das Feld 'date' ist, konvertieren wir es für SQL ---- Date darf nicht geändert werden
+        # if field == 'date':
+        #     try:
+        #         value = datetime.strptime(value, "%a, %d-%m-%Y").date()
+        #     except ValueError:
+        #         return jsonify({"status": "err", "msg": "Falsches Datumsformat"}), 400
+
+        # SQL Update ausführen
+        query = f"UPDATE diary SET {field} = %s WHERE date = %s AND user_id = %s"
+        # Hinweis: Falls dein Primary Key nicht 'date' ist, nimm hier die entsprechende ID-Spalte
+
+        err = sql.insert_query(query, (value, entry_id, temp_user.id))
+
+        if err:
+            return jsonify({"status": "err"}), 500
+        
+        return jsonify({"status": "ok"})
+
     
 # @api.route("admin/db/<db>", methods= ['POST'])
 # def api_db(db:str):
