@@ -15,6 +15,8 @@ def set_up_user(request, response):
         tmp_user.load_admin(id=id, cookie=request.cookies.get('bv_user'), key=request.cookies.get(Config.ADMIN_KEY))
         return tmp_user, response
     else:
+        if request.cookies.get("bv_user") == None:
+            return new_client(request=request, response=response)
         id = sql.search_for_member_cookie(request.cookies.get("bv_user"))
         if (id == -1):
             return new_client(request=request, response=response)

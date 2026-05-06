@@ -88,8 +88,8 @@ button_show.addEventListener('click', (event) => {
                                     setTimeout(() => this.style.backgroundColor = "transparent", 500);
                                 } else {
                                     this.style.transition = "0.5s"; // Sanfter Übergang
-                                    this.style.boxShadow = "0 0 10px #ff1f1f8d"; // Kurz grün aufleuchten lassen
-                                    this.style.backgroundColor = "#ff2a2a8d"; // Kurz grün aufleuchten lassen
+                                    this.style.boxShadow = "0 0 10px #ff1f1f8d"; // Kurz rot aufleuchten lassen
+                                    this.style.backgroundColor = "#ff2a2a8d"; // Kurz rot aufleuchten lassen
                                     setTimeout(() => this.style.boxShadow = "none", 500);
                                     setTimeout(() => this.style.backgroundColor = "transparent", 500);
                                     console.error("Fehler beim Speichern:", data.msg);
@@ -97,6 +97,12 @@ button_show.addEventListener('click', (event) => {
                             })
                             .catch(err => {
                                 console.error("Fehler beim Speichern:", err);
+                                this.style.transition = "0.5s"; // Sanfter Übergang
+                                this.style.boxShadow = "0 0 10px #ff1f1f8d"; // Kurz rot aufleuchten lassen
+                                this.style.backgroundColor = "#ff2a2a8d"; // Kurz rot aufleuchten lassen
+                                setTimeout(() => this.style.boxShadow = "none", 500);
+                                setTimeout(() => this.style.backgroundColor = "transparent", 500);
+                                console.error("Fehler beim Speichern:", data.msg);
                             });
                         };
 

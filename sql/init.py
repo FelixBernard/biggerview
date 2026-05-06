@@ -44,6 +44,18 @@ def create_temp_path_table():
 def create_diary_table():
     init_query(f"CREATE TABLE IF NOT EXISTS diary (user_id int, date DATE, diarytext text, flags text, sleepid int, eatid int)")
 
+def create_eat_table():
+    init_query(f"CREATE TABLE IF NOT EXISTS eat (user_id int, date DATE, eatid int)")
+
+def create_sleep_table():
+    init_query(f"CREATE TABLE IF NOT EXISTS sleep (user_id int, date DATE, sleeptime float, sleepid int)")
+
+def create_bank_table():
+    init_query(f"CREATE TABLE IF NOT EXISTS bank (user_id int, date DATE, timestemp TIMESTAMP, flags text, amount float, bankkonto float, info text)")
+
+def create_skills_table():
+    init_query(f"CREATE TABLE IF NOT EXISTS skills (user_id int, skilltext text, score int)")
+
 # def create_user_log_db(rank:chr, id) -> bool:
 #     with sqlite3.connect('data/user/individual/'+rank+id+'/invoice'+id+'.db') as database:
 #         database.execute("CREATE TABLE user (ip text, time_stemp text, side text)")

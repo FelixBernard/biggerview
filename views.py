@@ -17,42 +17,64 @@ def before():
 
 @views.route("/")
 def main():
-    if request.cookies.get("bv_user") == None:
-        return redirect(url_for("views.login"))
     tmp_user, response = set_up_user(request, make_response(""))
     if tmp_user.rank == "client":
         return redirect(url_for("views.login"))
     response.set_data(render_template("main/index.html", user=tmp_user))
     return tmp_user.response
 
-@views.route("/projects")
-def projects():
+@views.route("/today")
+def today():
     tmp_user, response = set_up_user(request, make_response(""))
-    response.set_data(render_template("main/projects.html", user=tmp_user))
+    if tmp_user.rank == "client":
+        return redirect(url_for("views.login"))
+    response.set_data(render_template("main/today.html", user=tmp_user))
+    return tmp_user.response
+
+@views.route("/eat")
+def eat():
+    tmp_user, response = set_up_user(request, make_response(""))
+    if tmp_user.rank == "client":
+        return redirect(url_for("views.login"))
+    response.set_data(render_template("main/eat.html", user=tmp_user))
+    return tmp_user.response
+
+@views.route("/sleep")
+def sleep():
+    tmp_user, response = set_up_user(request, make_response(""))
+    if tmp_user.rank == "client":
+        return redirect(url_for("views.login"))
+    response.set_data(render_template("main/sleep.html", user=tmp_user))
+    return tmp_user.response
+
+@views.route("/skills")
+def skills():
+    tmp_user, response = set_up_user(request, make_response(""))
+    if tmp_user.rank == "client":
+        return redirect(url_for("views.login"))
+    response.set_data(render_template("main/skills.html", user=tmp_user))
+    return tmp_user.response
+
+@views.route("/bank")
+def bank():
+    tmp_user, response = set_up_user(request, make_response(""))
+    if tmp_user.rank == "client":
+        return redirect(url_for("views.login"))
+    response.set_data(render_template("main/bank.html", user=tmp_user))
     return tmp_user.response
 
 @views.route("/profile")
 def profile():
     tmp_user, response = set_up_user(request, make_response(""))
     if tmp_user.rank == 'client':
-        response.set_data(render_template("main/profile.html"))
+        response.set_data(render_template("auth/profile.html"))
         return response
     elif tmp_user.rank == 'admin':
-        response.set_data(render_template("auth/profile.html", user=tmp_user))
+        response.set_data(render_template("admin/profile.html", user=tmp_user))
         return response
     else:
         abort(400)
 
-@views.route("/log")
-def secret():
-    code = generate_confirmation_code(10)
-    insert_log(time=datetime.now(timezone.utc), kind="INFO", status="precheck", mas="secret page accessed {ip: " + request.access_route[0] + ", cf-ip: " + str(request.headers.get('Cf-Connecting-Ip')) + "}, code: " + code)
-    tmp_user, response = set_up_user(request, make_response(""))
-    if tmp_user.rank != "admin":
-        abort(404)
-    response.set_data(render_template("nimda/log.html", user=tmp_user))
-    insert_log(time=datetime.now(timezone.utc), kind="INFO", status="passed", mas="secret page accessed {ip: " + request.access_route[0] + ", cf-ip: " + str(request.headers.get('Cf-Connecting-Ip')) + "} as admin with code: " + code)
-    return response
 
 @views.route("/login")
 def login():
@@ -70,6 +92,17 @@ def admin():
         return response
     else:
         abort(404)
+
+@views.route("/log")
+def secret():
+    code = generate_confirmation_code(10)
+    insert_log(time=datetime.now(timezone.utc), kind="INFO", status="precheck", mas="secret page accessed {ip: " + request.access_route[0] + ", cf-ip: " + str(request.headers.get('Cf-Connecting-Ip')) + "}, code: " + code)
+    tmp_user, response = set_up_user(request, make_response(""))
+    if tmp_user.rank != "admin":
+        abort(404)
+    response.set_data(render_template("nimda/log.html", user=tmp_user))
+    insert_log(time=datetime.now(timezone.utc), kind="INFO", status="passed", mas="secret page accessed {ip: " + request.access_route[0] + ", cf-ip: " + str(request.headers.get('Cf-Connecting-Ip')) + "} as admin with code: " + code)
+    return response
 
 @views.route("/ip")
 def ip():

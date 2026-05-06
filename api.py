@@ -20,11 +20,23 @@ PRIMARY_KEYS = {
     "adminveri": "veri",
     "member": "email",
     "membersession": "session_id",
-    "client": "id",
-    "clientsession": "session_id",
     "user": "email",
+    "eat": "id",
+    "sleep": "id",
+    "bank": "id",
     "blockedip": "ip",
     "log": "time"
+}
+
+TABLES = {
+    "admin": ["email", "ip", "entry_date", "name", "second_name"],
+    "adminsession": ["session_id", "ip", "time_stemp"],
+    "adminveri": ["veri", "active", "time_stemp"],
+    "member": ["email", "ip", "entry_date", "first_name", "last_name", "street", "house_number", "town", "town_number", "country"],
+    "membersession": ["session_id", "ip", "time_stemp"],
+    "user": ["email", "password"],
+    "blockedip": ["ip", "time_stemp"],
+    "log": ["time", "kind", "status", "massage"]
 }
 
 api = Blueprint(__name__, "api")
@@ -34,7 +46,8 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def is_admin(request) -> bool:
-    key = request.cookies.get(ADMIN_KEY)
+    # key = request.cookies.get(ADMIN_KEY)
+    key = None
     cookie = request.cookies.get('user')
     if key == None:
         return False
