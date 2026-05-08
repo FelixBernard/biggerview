@@ -13,15 +13,21 @@ def count_clients():
 def init_server(set_admin_manually:bool=True):
     # Alle DB's für Nutzer erzeugen
     init_files.create_system_table()
+    
     init_files.create_general_user_table()
-    # init_files.create_general_client_table()
-    # init_files.create_general_client_session_id_table()
     init_files.create_general_member_table()
     init_files.create_general_member_session_id_table()
     init_files.create_general_admin_table()
     init_files.create_general_admin_session_id_table()
     init_files.create_general_admin_key_table()
+
     init_files.create_diary_table()
+    init_files.create_eat_table()
+    init_files.create_meal_table()
+    init_files.create_mealocc_table()
+    init_files.create_sleep_table()
+    init_files.create_bank_table()
+    init_files.create_skills_table()
     
     # System Datenbanken
     init_files.create_blocked_ip_table()

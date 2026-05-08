@@ -102,7 +102,6 @@ button_show.addEventListener('click', (event) => {
                                 this.style.backgroundColor = "#ff2a2a8d"; // Kurz rot aufleuchten lassen
                                 setTimeout(() => this.style.boxShadow = "none", 500);
                                 setTimeout(() => this.style.backgroundColor = "transparent", 500);
-                                console.error("Fehler beim Speichern:", data.msg);
                             });
                         };
 

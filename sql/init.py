@@ -45,7 +45,13 @@ def create_diary_table():
     init_query(f"CREATE TABLE IF NOT EXISTS diary (user_id int, date DATE, diarytext text, flags text, sleepid int, eatid int)")
 
 def create_eat_table():
-    init_query(f"CREATE TABLE IF NOT EXISTS eat (user_id int, date DATE, eatid int)")
+    init_query(f"CREATE TABLE IF NOT EXISTS eat (user_id int, date DATE, eatid int, weight float)")
+
+def create_meal_table():
+    init_query(f"CREATE TABLE IF NOT EXISTS meal (user_id int, eatid int, mealid int, weight float)")
+
+def create_mealocc_table():
+    init_query(f"CREATE TABLE IF NOT EXISTS mealocc (mealid int, name text, kcal float, carbs float, protein float, fat float)")
 
 def create_sleep_table():
     init_query(f"CREATE TABLE IF NOT EXISTS sleep (user_id int, date DATE, sleeptime float, sleepid int)")
