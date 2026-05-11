@@ -7,9 +7,6 @@ from user.user import Admin
 from scripts.func import hash_in, generate_confirmation_code
 from config import Config
 
-def count_clients():
-    return 0
-
 def init_server(set_admin_manually:bool=True):
     # Alle DB's für Nutzer erzeugen
     init_files.create_system_table()
@@ -61,19 +58,6 @@ def init_server(set_admin_manually:bool=True):
             new_prep_admin()
             print("Admin angelegt (preparation)")
 
-
-
-def init_session():
-    init_files.create_general_client_session_id_table()
-    print('intit general user table')
-
-def init():
-    init_files.create_general_client_table()
-    print('init gc')
-
-def init_user():
-    init_files.create_general_user_table()
-
 def init_data_folder():
     try:
         os.makedirs('data/user/individual')
@@ -81,14 +65,6 @@ def init_data_folder():
         os.makedirs('data/shop')
     except:
         pass
-
-def init_member():
-    init_files.create_general_member_session_id_table()
-    init_files.create_general_member_table()
-
-
-def delete_output_log():
-    os.remove('output.log')
 
 def delete_all_dbs():
     import shutil
@@ -106,20 +82,6 @@ def delete_all_dbs():
 def all_session():
     while ((i := input('rank zum printen(quit zum beenden): ')) != 'quit'):
         sql.show_all(i)
-
-def all():
-    while ((i := input('rank zum printen(quit zum beenden): ')) != 'quit'):
-        sql.show_all_gc(i)
-
-def deletee():
-    while ((i := input('rank zum deleten(quit zum beenden): ')) != 'quit'):
-        while ((m := input('id zum deleten(quit zum beenden): ')) != 'quit'):
-            sql.delete_user_session(i, m)
-
-def deletee_2():
-    while ((i := input('rank zum deleten(quit zum beenden): ')) != 'quit'):
-        while ((m := input('id zum deleten(quit zum beenden): ')) != 'quit'):
-            sql.delete_user(i, m)
 
 def ss():
     cookie = input('cookie to search: ')
@@ -218,15 +180,8 @@ def add_diary_entry():
 if __name__ == '__main__':
     dic = {
         'init server': init_server,
-        'init user file/table': init,
-        'init session': init_session,
         'init data folder(not needet)': init_data_folder,
-        'init user': init_user,
-        'init member': init_member,
-        'clear(delete) output.log': delete_output_log,
         'all session': all_session,
-        'delete': deletee,
-        'delete2': deletee_2,
         'search': ss,
         'all': all,
         'new admin': new_admin,

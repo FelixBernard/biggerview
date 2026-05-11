@@ -1,0 +1,31 @@
+{% extends "main/overlay.html" %} {% block content %}
+<script src="{{ url_for('static', filename='js/main/bank.js') }}" defer></script>
+<div class="main-offset">
+    <div id="main-div" class="main-div">
+        <div class="box">
+            <div class="button-wrapper"><button class="button" id="show-diary">Verlauf anzeigen</button></div>
+        </div>
+        <div class="box">
+            <form action="">
+                <select id="bank" name="bank">
+                    <option value="mb">mb</option>
+                    <option value="bank1">bank1</option>
+                    <option value="bank2">bank2</option>
+                </select>
+                <input type="text" id="transaction-name" name="transactionname" placeholder="Transaktionsname">
+                <input type="text" id="transaction-description" name="transactiondescription" placeholder="Beschreibung">
+                <input type="text" id="transaction-category" name="transactioncategory" placeholder="Kategorie">
+                <input type="date" id="transaction-date" name="transactiondate" placeholder="Datum">
+                <input type="time" id="transaction-time" name="transactiontime" placeholder="Uhrzeit">
+                <input type="number" id="transaction-amount" name="transactionamount" placeholder="Betrag">
+                <input type="text" id="transaction-flags" name="transactionflags" placeholder="Flags (optional)">
+            </form>
+            <div class="button-wrapper"><button class="button" id="add-transaction">Füge heute hinzu</button></div>
+        </div>
+        <div class="box">
+            <table id="transaction-table"></table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
