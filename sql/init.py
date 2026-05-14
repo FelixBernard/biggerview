@@ -57,7 +57,10 @@ def create_sleep_table():
     init_query(f"CREATE TABLE IF NOT EXISTS sleep (user_id int, date DATE, sleeptime float, sleepid int)")
 
 def create_bank_table():
-    init_query(f"CREATE TABLE IF NOT EXISTS bank (user_id int, date DATE, timestemp TIMESTAMP, flags text, amount float, bankkonto float, info text)")
+    init_query(f"CREATE TABLE IF NOT EXISTS bank (user_id int, date DATE, timestemp TIMESTAMP, bankid int not null Auto_increment, bankkonto text, flags text, info text, amount float, PRIMARY KEY (bankid))")
+
+def create_transaction_table():
+    init_query(f"CREATE TABLE IF NOT EXISTS transfer (user_id int, date DATE, timestemp TIMESTAMP, transferid int not null Auto_increment, amount float, bankid int, flags text, info text, PRIMARY KEY (transferid))")
 
 def create_skills_table():
     init_query(f"CREATE TABLE IF NOT EXISTS skills (user_id int, skilltext text, score int)")

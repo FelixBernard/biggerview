@@ -24,6 +24,7 @@ def init_server(set_admin_manually:bool=True):
     init_files.create_mealocc_table()
     init_files.create_sleep_table()
     init_files.create_bank_table()
+    init_files.create_transaction_table()
     init_files.create_skills_table()
     
     # System Datenbanken
@@ -156,6 +157,24 @@ def overview():
     print("Admins:")
     print(sql.universel_db_query(f"SELECT * FROM admin"))
 
+def add_bank():
+    user_id = int(input("User ID: "))
+    date_str = input("Date (TT-MM-JJJJ): ")
+    try:
+        formatted_date = datetime.strptime(date_str, "%d-%m-%Y").date()
+        amount = float(input("Amount: "))
+        bankkonto = input("Bankkonto: ")
+        flags = input("Flags: ")
+        info = input("Info: ")
+        
+        sql.init_query("INSERT INTO bank (user_id, bankkonto, amount, flags, info) VALUES (%s, %s, %s, %s, %s)",
+            (user_id, bankkonto, amount, flags, info)
+        )
+        print("Bank entry added.")
+        
+    except Exception as e:
+        print("Fehler:", e)
+
 def add_diary_entry():
     while (x := input("Möchten Sie einen Tagebucheintrag hinzufügen? (ja/nein): ")) != 'nein':
         user_id = int(input("User ID: "))
@@ -174,8 +193,8 @@ def add_diary_entry():
             )
             print("Diary entry added.")
             
-        except ValueError:
-            print("Fehler: Bitte das Datum im Format TT-MM-JJJJ eingeben (z.B. 01-05-2026).")
+        except Exception as e:
+            print(f"Fehler: {e}")
 
 if __name__ == '__main__':
     dic = {
@@ -194,7 +213,8 @@ if __name__ == '__main__':
         'new news': new_news,
         'overview': overview,
         'reqestlog': lambda: print(sql.universel_db_query("SELECT DATE_FORMAT(STR_TO_DATE(time, '%Y-%m-%d %H:%i:%s.%f'), '%Y-%m-%d %H:00:00') AS hour, COUNT(*) AS request_count FROM requestlog WHERE STR_TO_DATE(time, '%Y-%m-%d %H:%i:%s.%f') >= DATE_SUB(NOW(), INTERVAL 7 DAY) GROUP BY hour ORDER BY hour")),
-        'add diary entry': add_diary_entry
+        'add diary entry': add_diary_entry,
+        'add bank': add_bank
     }
     while ((i := input('aktion(quit zum beenden): ')) != 'quit'):
         if i in dic:

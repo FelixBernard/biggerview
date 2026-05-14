@@ -292,6 +292,24 @@ def update_diary():
             return jsonify({"status": "err"}), 500
         
         return jsonify({"status": "ok"})
+    
+
+@api.route("get_banks", methods = ['POST'])
+def api_get_banks():
+    if request.method == 'POST':
+        temp_user, response = set_up_user(request, make_response(""))
+        try:
+            liste, err = sql.universel_db_query(f"Select bankid, bankkonto from bank where user_id = %s", False, (temp_user.id,))
+            if err:
+                return jsonify(create_post_response('err', [])), 400
+            masg = {
+                "datas": liste
+            }
+            return jsonify(create_post_response('ok', masg)), 200
+        except Exception as e:
+            # sql.insert_log(datetime.now(timezone.utc), 'api_log', 'err', 'Es konnte keine datenbank gefunden werden')
+            liste = []
+            return jsonify(create_post_response(f'err', e)), 403
 
     
 # @api.route("admin/db/<db>", methods= ['POST'])
